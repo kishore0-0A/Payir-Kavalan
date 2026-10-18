@@ -7,21 +7,23 @@ import {
 import base44 from '@/api/apiClient';
 import { cn } from '@/lib/utils';
 import LanguageSelector from '@/components/LanguageSelector';
+import { useLanguage } from '@/lib/i18n';
 import MobileBottomNav from '@/components/MobileBottomNav';
 import OfflineBanner from '@/components/OfflineBanner';
 
 const NAV = [
-  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'My Crops', to: '/my-crops', icon: Sprout },
-  { label: 'Scan Crop', to: '/scan', icon: ScanLine },
-  { label: 'Diagnosis History', to: '/history', icon: History },
-  { label: 'Expert Help', to: '/experts', icon: Stethoscope },
-  { label: 'Alerts', to: '/alerts', icon: Bell },
-  { label: 'Disease Library', to: '/knowledge', icon: BookOpen },
-  { label: 'Profile', to: '/profile', icon: User }
+  { id: 'dashboard', label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
+  { id: 'myCrops', label: 'My Crops', to: '/my-crops', icon: Sprout },
+  { id: 'scan', label: 'Scan Crop', to: '/scan', icon: ScanLine },
+  { id: 'history', label: 'Diagnosis History', to: '/history', icon: History },
+  { id: 'experts', label: 'Expert Help', to: '/experts', icon: Stethoscope },
+  { id: 'alerts', label: 'Alerts', to: '/alerts', icon: Bell },
+  { id: 'knowledge', label: 'Disease Library', to: '/knowledge', icon: BookOpen },
+  { id: 'profile', label: 'Profile', to: '/profile', icon: User }
 ];
 
 export default function FarmerLayout() {
+  const { t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -67,7 +69,7 @@ export default function FarmerLayout() {
                   'h-2 w-2 rounded-full transition-all',
                   active ? 'bg-primary-foreground ring-2 ring-primary-foreground/30' : 'bg-muted-foreground/40 group-hover:bg-primary'
                 )} />
-                <span>{item.label}</span>
+                <span>{t('nav.' + item.id, item.label)}</span>
               </div>
               {active && (
                 <span className="font-mono text-[10px] font-bold uppercase tracking-wider bg-primary-foreground/20 px-2 py-0.5 rounded-md">
@@ -94,14 +96,14 @@ export default function FarmerLayout() {
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold">{name}</p>
-            <p className="truncate text-xs text-muted-foreground capitalize">{user?.role || 'Farmer'}</p>
+            <p className="truncate text-xs text-muted-foreground capitalize">{user?.role === 'farmer' ? t('profile.farmer', 'Farmer') : (user?.role || 'Farmer')}</p>
           </div>
         </div>
         <button
           onClick={logout}
           className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
         >
-          <LogOut className="h-4 w-4" /> Sign out
+          <LogOut className="h-4 w-4" /> {t('nav.signOut', 'Sign out')}
         </button>
       </div>
     </div>

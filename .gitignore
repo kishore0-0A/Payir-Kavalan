@@ -53,3 +53,4 @@ CropCareAI/datasets/
 CropCareAI/outputs/
 *.zip
 scratch/
+backend/uploads/

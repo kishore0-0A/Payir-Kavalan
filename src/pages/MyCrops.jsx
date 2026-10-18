@@ -9,6 +9,7 @@ import base44 from '@/api/apiClient';
 import { SUPPORTED_CROPS } from '@/lib/cropData';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/components/ui/use-toast';
+import { useLanguage } from '@/lib/i18n';
 
 const HEALTH = {
   healthy: { label: 'Healthy', cls: 'bg-emerald-500/15 text-emerald-700 border-emerald-500/30' },
@@ -20,6 +21,7 @@ const HEALTH = {
 const EMPTY = { crop_name: '', variety: '', planting_date: '', field_size: '', location: '', notes: '' };
 
 export default function MyCrops() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [crops, setCrops] = useState([]);
@@ -120,7 +122,7 @@ export default function MyCrops() {
             <span>Farm Plots & Field Records</span>
           </div>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            My Crops
+            {t('nav.myCrops', 'My Crops')}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Manage your planted parcels, track field health, and perform targeted AI diagnosis.
@@ -132,7 +134,7 @@ export default function MyCrops() {
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition hover:bg-primary/90 active:scale-95"
         >
           <Plus className="h-4 w-4" />
-          <span>Add New Crop</span>
+          <span>{t('mycrops.add', 'Add New Crop')}</span>
         </button>
       </div>
 
@@ -140,15 +142,15 @@ export default function MyCrops() {
       {crops.length > 0 && (
         <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
-            <p className="text-xs font-medium text-muted-foreground">Total Parcels</p>
+            <p className="text-xs font-medium text-muted-foreground">{t('mycrops.totalParcels', 'Total Parcels')}</p>
             <p className="mt-1 text-2xl font-bold text-foreground">{crops.length}</p>
           </div>
           <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 shadow-sm">
-            <p className="text-xs font-medium text-emerald-700">Healthy Crops</p>
+            <p className="text-xs font-medium text-emerald-700">{t('mycrops.healthyCrops', 'Healthy Crops')}</p>
             <p className="mt-1 text-2xl font-bold text-emerald-600">{healthyCount}</p>
           </div>
           <div className="col-span-2 sm:col-span-1 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 shadow-sm">
-            <p className="text-xs font-medium text-amber-700">Under Monitoring</p>
+            <p className="text-xs font-medium text-amber-700">{t('mycrops.underMonitoring', 'Under Monitoring')}</p>
             <p className="mt-1 text-2xl font-bold text-amber-600">{attentionCount}</p>
           </div>
         </div>

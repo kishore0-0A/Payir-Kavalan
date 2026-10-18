@@ -46,17 +46,21 @@ export default function Dashboard() {
   }, [user]);
 
   const hour = new Date().getHours();
-  const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  const name = greetingName || (user?.full_name?.split(' ')[0]) || 'Farmer';
+  const greet = hour < 12 
+    ? t('dashboard.goodMorning', 'Good morning') 
+    : hour < 17 
+      ? t('dashboard.goodAfternoon', 'Good afternoon') 
+      : t('dashboard.goodEvening', 'Good evening');
+  const name = greetingName || (user?.full_name?.split(' ')[0]) || t('profile.farmer', 'Farmer');
 
   const latest = diagnoses[0];
   const todayReminder = reminders.find((r) => new Date(r.reminder_date) <= new Date(Date.now() + 86400000));
 
   const cards = [
-    { icon: Sprout, title: 'My Crops', value: crops.length, sub: crops.length ? `${crops.filter(c => c.health_status === 'healthy').length} healthy` : 'No crops yet', to: '/my-crops', color: 'text-primary' },
-    { icon: History, title: 'Recent Diagnosis', value: latest?.predicted_disease || '—', sub: latest ? `${Math.round((latest.confidence || 0) * 100)}% confidence` : 'No assessments yet', to: '/history', color: 'text-foreground' },
-    { icon: ShieldAlert, title: 'Disease Risk', value: weather && weather.humidity > 70 ? 'Moderate' : 'Low', sub: weather && weather.humidity > 70 ? 'High humidity advisory' : 'Normal conditions', to: '/alerts', color: weather && weather.humidity > 70 ? 'text-warning-foreground' : 'text-success' },
-    { icon: CloudSun, title: 'Weather', value: weather ? weather.condition : 'Loading...', sub: weather ? `${weather.temp}°C, ${weather.rain}% rain prob.` : 'Please wait', to: '/alerts', color: 'text-primary' }
+    { icon: Sprout, title: t('dashboard.myCrops', 'My Crops'), value: crops.length, sub: crops.length ? `${crops.filter(c => c.health_status === 'healthy').length} ${t('dashboard.healthy', 'healthy')}` : t('dashboard.noCrops', 'No crops yet'), to: '/my-crops', color: 'text-primary' },
+    { icon: History, title: t('dashboard.recentDiagnosis', 'Recent Diagnosis'), value: latest?.predicted_disease || '—', sub: latest ? `${Math.round((latest.confidence || 0) * 100)}% ${t('dashboard.confidence', 'confidence')}` : t('dashboard.noAssessments', 'No assessments yet'), to: '/history', color: 'text-foreground' },
+    { icon: ShieldAlert, title: t('dashboard.diseaseRisk', 'Disease Risk'), value: weather && weather.humidity > 70 ? t('dashboard.moderate', 'Moderate') : t('dashboard.low', 'Low'), sub: weather && weather.humidity > 70 ? t('dashboard.highHumidity', 'High humidity advisory') : t('dashboard.normalConditions', 'Normal conditions'), to: '/alerts', color: weather && weather.humidity > 70 ? 'text-warning-foreground' : 'text-success' },
+    { icon: CloudSun, title: t('dashboard.weather', 'Weather'), value: weather ? weather.condition : 'Loading...', sub: weather ? `${weather.temp}°C, ${weather.rain}% ${t('dashboard.rainProb', 'rain prob.')}` : 'Please wait', to: '/alerts', color: 'text-primary' }
   ];
 
   return (
@@ -78,11 +82,11 @@ export default function Dashboard() {
             <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="max-w-xl">
                 <h2 className="text-2xl font-bold sm:text-3xl tracking-tight text-white font-display">
-                  Diagnose Crop Health & Get Prescriptions
+                  {t('dashboard.bannerTitle', 'Diagnose Crop Health & Get Prescriptions')}
                 </h2>
                 
                 <p className="mt-2 text-emerald-100/90 text-sm sm:text-base leading-relaxed">
-                  Upload a clear field leaf photo to detect fungal, bacterial, or pest damage with verified chemical and organic treatment protocols.
+                  {t('dashboard.bannerDesc', 'Upload a clear field leaf photo to detect fungal, bacterial, or pest damage with verified chemical and organic treatment protocols.')}
                 </p>
 
                 {/* Action Buttons */}
@@ -92,7 +96,7 @@ export default function Dashboard() {
                     className="group inline-flex items-center gap-2.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 px-6 py-3.5 font-bold text-emerald-950 shadow-lg shadow-emerald-950/40 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <ScanLine className="h-5 w-5 text-emerald-950 transition-transform group-hover:scale-110" /> 
-                    <span>Upload Leaf & Begin Diagnosis</span>
+                    <span>{t('dashboard.uploadLeaf', 'Upload Leaf & Begin Diagnosis')}</span>
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                   </button>
 
@@ -101,7 +105,7 @@ export default function Dashboard() {
                     className="inline-flex items-center gap-2 rounded-xl bg-white/10 hover:bg-white/15 px-4 py-3.5 text-xs font-semibold text-white backdrop-blur-md border border-white/15 transition active:scale-95"
                   >
                     <Stethoscope className="h-4 w-4 text-emerald-300" />
-                    <span>Talk to Plant Doctor</span>
+                    <span>{t('dashboard.talkDoctor', 'Talk to Plant Doctor')}</span>
                   </button>
                 </div>
               </div>
@@ -111,9 +115,9 @@ export default function Dashboard() {
           {/* Quick actions */}
           <div className="grid grid-cols-3 gap-3 fade-up-2">
             {[
-              { icon: Sprout, label: 'My Crops', to: '/my-crops' },
-              { icon: History, label: 'History', to: '/history' },
-              { icon: Stethoscope, label: 'Expert Help', to: '/experts' }
+              { icon: Sprout, label: t('dashboard.myCrops', 'My Crops'), to: '/my-crops' },
+              { icon: History, label: t('nav.history', 'History'), to: '/history' },
+              { icon: Stethoscope, label: t('nav.experts', 'Expert Help'), to: '/experts' }
             ].map((a) => {
               const Icon = a.icon;
               return (

@@ -1,8 +1,12 @@
 import React from "react";
+import LanguageSelector from "@/components/LanguageSelector";
 
 export default function AuthLayout({ icon: Icon, title, subtitle, footer, children }) {
   return (
-    <div className="auth-shell min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="auth-shell relative min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="absolute top-4 right-4">
+        <LanguageSelector compact />
+      </div>
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary mb-4">

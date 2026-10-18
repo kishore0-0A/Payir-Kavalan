@@ -745,7 +745,164 @@ const T = {
   'pages.contact.send': { en: 'Send Message', ta: 'செய்தியை அனுப்புங்கள்', hi: 'संदेश भेजें', te: 'సందేశం పంపండి', kn: 'ಸಂದೇಶ ಕಳುಹಿಸಿ', ml: 'സന്ദേശം അയയ്ക്കുക' }
   ,
   'pages.contact.phone': { en: 'Phone', ta: 'தொலைபேசி', hi: 'फ़ोन', te: 'ఫోన్', kn: 'ದೂರವಾಣಿ', ml: 'ഫോൺ' },
-  'pages.contact.location': { en: 'Location', ta: 'இடம்', hi: 'स्थान', te: 'స్థానం', kn: 'ಸ್ಥಳ', ml: 'സ്ഥലം' }
+  'pages.contact.location': { en: 'Location', ta: 'இடம்', hi: 'स्थान', te: 'స్థానం', kn: 'ಸ್ಥಳ', ml: 'സ്ഥലം' },
+  // Auth Keys
+  'auth.welcomeBack': { en: 'Welcome back', ta: 'மீண்டும் வருக', hi: 'वापसी पर स्वागत है' },
+  'auth.loginSubtitle': { en: 'Log in to your account', ta: 'உங்கள் கணக்கில் உள்நுழையவும்', hi: 'अपने खाते में लॉग इन करें' },
+  'auth.createAccount': { en: 'Create your account', ta: 'உங்கள் கணக்கை உருவாக்கவும்', hi: 'अपना खाता बनाएँ' },
+  'auth.registerSubtitle': { en: 'Start detecting crop diseases early', ta: 'பயிர் நோய்களை முன்கூட்டியே கண்டறியத் தொடங்குங்கள்', hi: 'फसल रोगों का जल्दी पता लगाना शुरू करें' },
+  'auth.continueGoogle': { en: 'Continue with Google', ta: 'Google மூலம் தொடரவும்', hi: 'Google के साथ जारी रखें' },
+  'auth.or': { en: 'or', ta: 'அல்லது', hi: 'या' },
+  'auth.email': { en: 'Email', ta: 'மின்னஞ்சல்', hi: 'ईमेल' },
+  'auth.password': { en: 'Password', ta: 'கடவுச்சொல்', hi: 'पासवर्ड' },
+  'auth.logIn': { en: 'Log in', ta: 'உள்நுழையவும்', hi: 'लॉग इन करें' },
+  'auth.loggingIn': { en: 'Logging in...', ta: 'உள்நுழைகிறது...', hi: 'लॉग इन हो रहा है...' },
+  'auth.register': { en: 'Register', ta: 'பதிவு செய்யவும்', hi: 'रजिस्टर करें' },
+  'auth.registering': { en: 'Creating account...', ta: 'கணக்கை உருவாக்குகிறது...', hi: 'खाता बना रहा है...' },
+  'auth.noAccount': { en: "Don't have an account?", ta: 'கணக்கு இல்லையா?', hi: 'खाता नहीं है?' },
+  'auth.haveAccount': { en: 'Already have an account?', ta: 'ஏற்கனவே கணக்கு உள்ளதா?', hi: 'पहले से खाता है?' },
+  'auth.createOne': { en: 'Create one', ta: 'புதிதாக உருவாக்கவும்', hi: 'नया बनाएँ' },
+  'auth.signIn': { en: 'Sign in', ta: 'உள்நுழையவும்', hi: 'साइन इन करें' },
+
+  // Navigation Keys
+  'nav.dashboard': { en: 'Dashboard', ta: 'டாஷ்போர்டு', hi: 'डैशबोर्ड' },
+  'nav.myCrops': { en: 'My Crops', ta: 'என் பயிர்கள்', hi: 'मेरी फसलें' },
+  'nav.scan': { en: 'Scan Crop', ta: 'பயிர் ஸ்கேன்', hi: 'फसल स्कैन' },
+  'nav.history': { en: 'Diagnosis History', ta: 'நோயறிதல் வரலாறு', hi: 'निदान इतिहास' },
+  'nav.experts': { en: 'Expert Help', ta: 'நிபுணர் உதவி', hi: 'विशेषज्ञ सहायता' },
+  'nav.alerts': { en: 'Alerts', ta: 'எச்சரிக்கைகள்', hi: 'अलर्ट' },
+  'nav.knowledge': { en: 'Disease Library', ta: 'நோய் நூலகம்', hi: 'रोग लाइब्रेरी' },
+  'nav.profile': { en: 'Profile', ta: 'சுயவிவரம்', hi: 'प्रोफ़ाइल' },
+  'nav.active': { en: 'Active', ta: 'செயலில்', hi: 'सक्रिय' },
+  'nav.signOut': { en: 'Sign out', ta: 'வெளியேறு', hi: 'साइन आउट' },
+  'nav.expertPortal': { en: 'Expert Portal', ta: 'நிபுணர் போர்டல்', hi: 'विशेषज्ञ पोर्टल' },
+  'nav.adminPortal': { en: 'Admin Portal', ta: 'நிர்வாக போர்டல்', hi: 'एडमिन पोर्टल' },
+
+  // Profile Keys
+  'profile.title': { en: 'Account & Settings', ta: 'கணக்கு மற்றும் அமைப்புகள்', hi: 'खाता और सेटिंग्स' },
+  'profile.farmer': { en: 'Farmer', ta: 'விவசாயி', hi: 'किसान' },
+  'profile.totalCrops': { en: 'Total Crops', ta: 'மொத்த பயிர்கள்', hi: 'कुल फसलें' },
+  'profile.aiScans': { en: 'AI Scans', ta: 'AI ஸ்கேன்கள்', hi: 'AI स्कैन' },
+  'profile.personalDetails': { en: 'Personal Details', ta: 'தனிப்பட்ட விவரங்கள்', hi: 'व्यक्तिगत विवरण' },
+  'profile.fullName': { en: 'Full name', ta: 'முழு பெயர்', hi: 'पूरा नाम' },
+  'profile.email': { en: 'Email', ta: 'மின்னஞ்சல்', hi: 'ईमेल' },
+  'profile.mobile': { en: 'Mobile number', ta: 'கைபேசி எண்', hi: 'मोबाइल नंबर' },
+  'profile.location': { en: 'Location', ta: 'இடம்', hi: 'स्थान' },
+  'profile.primaryCrop': { en: 'Primary crop', ta: 'முதன்மை பயிர்', hi: 'मुख्य फसल' },
+  'profile.accountType': { en: 'Account Type', ta: 'கணக்கு வகை', hi: 'खाता प्रकार' },
+  'profile.roleFarmer': { en: 'Farmer — Crop health & AI diagnosis', ta: 'விவசாயி — பயிர் ஆரோக்கியம் & AI நோயறிதல்', hi: 'किसान — फसल स्वास्थ्य और AI निदान' },
+  'profile.roleExpert': { en: 'Agricultural Expert — Case reviews & advisory', ta: 'வேளாண் நிபுணர் — வழக்கு மதிப்பாய்வு & ஆலோசனை', hi: 'कृषि विशेषज्ञ — केस समीक्षा और सलाह' },
+  'profile.roleAdmin': { en: 'Administrator — System operations & management', ta: 'நிர்வாகி — கணினி செயல்பாடுகள் & மேலாண்மை', hi: 'प्रशासक — सिस्टम संचालन और प्रबंधन' },
+  'profile.expertPortalAvailable': { en: 'Expert Portal Available', ta: 'நிபுணர் போர்டல் கிடைக்கிறது', hi: 'विशेषज्ञ पोर्टल उपलब्ध है' },
+  'profile.expertPortalDesc': { en: 'Access your incoming farmer cases & reviews queue.', ta: 'விவசாயிகளின் வழக்குகள் மற்றும் மதிப்பாய்வு வரிசையை அணுகவும்.', hi: 'अपने आने वाले किसान मामलों और समीक्षा कतार तक पहुँचें।' },
+  'profile.openExpertPanel': { en: 'Open Expert Panel', ta: 'நிபுணர் பேனலைத் திறக்கவும்', hi: 'विशेषज्ञ पैनल खोलें' },
+  'profile.saveProfile': { en: 'Save Profile', ta: 'சுயவிவரத்தை சேமிக்கவும்', hi: 'प्रोफ़ाइल सहेजें' },
+  'profile.saving': { en: 'Saving...', ta: 'சேமிக்கிறது...', hi: 'सहेज रहा है...' },
+  'profile.saved': { en: 'Profile updated', ta: 'சுயவிவரம் புதுப்பிக்கப்பட்டது', hi: 'प्रोफ़ाइल अपडेट हो गई' },
+  'profile.saveError': { en: 'Could not save', ta: 'சேமிக்க முடியவில்லை', hi: 'सहेज नहीं सके' },
+  'profile.security': { en: 'Security', ta: 'பாதுகாப்பு', hi: 'सुरक्षा' },
+  'profile.currentPassword': { en: 'Current Password', ta: 'தற்போதைய கடவுச்சொல்', hi: 'वर्तमान पासवर्ड' },
+  'profile.newPassword': { en: 'New Password', ta: 'புதிய கடவுச்சொல்', hi: 'नया पासवर्ड' },
+  'profile.changePassword': { en: 'Change Password', ta: 'கடவுச்சொல்லை மாற்றவும்', hi: 'पासवर्ड बदलें' },
+  'profile.updatingPassword': { en: 'Updating...', ta: 'புதுப்பிக்கிறது...', hi: 'अपडेट हो रहा है...' },
+  'profile.passwordChanged': { en: 'Password changed successfully', ta: 'கடவுச்சொல் வெற்றிகரமாக மாற்றப்பட்டது', hi: 'पासवर्ड सफलतापूर्वक बदल गया' },
+  'profile.passwordFailed': { en: 'Password change failed', ta: 'கடவுச்சொல் மாற்றம் தோல்வியடைந்தது', hi: 'पासवर्ड परिवर्तन विफल रहा' },
+  'profile.preferences': { en: 'Preferences', ta: 'விருப்பத்தேர்வுகள்', hi: 'प्राथमिकताएँ' },
+  'profile.displayLanguage': { en: 'Display Language', ta: 'காட்சி மொழி', hi: 'प्रदर्शन भाषा' },
+  'profile.displayLanguageDesc': { en: 'Select your preferred language for the entire platform.', ta: 'முழு தளத்திற்கும் உங்கள் விருப்ப மொழியைத் தேர்ந்தெடுக்கவும்.', hi: 'पूरे प्लेटफ़ॉर्म के लिए अपनी पसंदीदा भाषा चुनें।' },
+  'profile.voiceAssistance': { en: 'Voice assistance', ta: 'குரல் உதவி', hi: 'वॉइस सहायता' },
+  'profile.voiceAssistanceDesc': { en: "Listen to results and guidance aloud using your device's text-to-speech.", ta: 'உங்கள் சாதனத்தின் உரையிலிருந்து பேச்சு வசதியைப் பயன்படுத்தி வழிகாட்டுதலைக் கேளுங்கள்.', hi: 'अपनी डिवाइस के टेक्स्ट-टू-स्पीच का उपयोग करके मार्गदर्शन सुनें।' },
+  'profile.testVoice': { en: 'Test voice', ta: 'குரலைச் சோதிக்கவும்', hi: 'वॉइस टेस्ट करें' },
+  'profile.playingSample': { en: 'Playing sample', ta: 'மாதிரி ஒலிக்கிறது', hi: 'नमूना बज रहा है' },
+  'profile.voiceSample': { en: 'Voice assistance is working properly.', ta: 'குரல் உதவி சரியாக செயல்படுகிறது.', hi: 'वॉइस सहायता सही ढंग से काम कर रही है।' },
+  'profile.voiceUnsupported': { en: 'Voice is not supported on this device.', ta: 'இந்த சாதனத்தில் குரல் உதவி ஆதரிக்கப்படவில்லை.', hi: 'इस डिवाइस पर वॉइस समर्थित नहीं है।' },
+  'profile.alertPreferences': { en: 'Alert preferences', ta: 'எச்சரிக்கை விருப்பத்தேர்வுகள்', hi: 'अलर्ट प्राथमिकताएँ' },
+  'profile.inspectionReminder': { en: 'Crop inspection reminders', ta: 'பயிர் ஆய்வு நினைவூட்டல்கள்', hi: 'फसल जाँच अनुस्मारक' },
+  'profile.inspectionReminderDesc': { en: 'Reminders to check your crops.', ta: 'உங்கள் பயிர்களைச் சரிபார்க்க நினைவூட்டல்கள்.', hi: 'अपनी फसलों की जाँच के अनुस्मारक।' },
+  'profile.weatherAlerts': { en: 'Weather alerts', ta: 'வானிலை எச்சரிக்கைகள்', hi: 'मौसम अलर्ट' },
+  'profile.weatherAlertsDesc': { en: 'Rain, heat and humidity advisories.', ta: 'மழை, வெப்பம் மற்றும் ஈரப்பதம் ஆலோசனைகள்.', hi: 'बारिश, गर्मी और नमी की सलाह।' },
+  'profile.riskAlerts': { en: 'Disease-risk notifications', ta: 'நோய்-ஆபத்து அறிவிப்புகள்', hi: 'रोग-जोखिम सूचनाएँ' },
+  'profile.riskAlertsDesc': { en: 'Advisories when conditions favour disease.', ta: 'நோய் பரவ சாதகமான நிலை ஏற்படும் போது ஆலோசனைகள்.', hi: 'रोग के अनुकूल स्थितियों पर सूचनाएँ।' },
+  'profile.connectivity': { en: 'Connectivity', ta: 'இணைப்பு', hi: 'कनेक्टिविटी' },
+  'profile.online': { en: 'Online', ta: 'ஆன்லைன்', hi: 'ऑनलाइन' },
+  'profile.offlineMode': { en: 'Offline mode', ta: 'ஆஃப்லைன் முறை', hi: 'ऑफलाइन मोड' },
+  'profile.offlineDesc': { en: 'When offline, you can view saved diagnoses and crops, and queue scans for later.', ta: 'ஆஃப்லைனில் இருக்கும்போது சேமித்த நோயறிதல்கள் மற்றும் பயிர்களைப் பார்க்கலாம்.', hi: 'ऑफलाइन होने पर सहेजे गए निदान और फसलें देख सकते हैं।' },
+  'profile.privateData': { en: 'Your data is private.', ta: 'உங்கள் தரவு பாதுகாப்பானது.', hi: 'आपका डेटा सुरक्षित है।' },
+
+  // Dashboard Keys
+  'dashboard.goodMorning': { en: 'Good morning', ta: 'காலை வணக்கம்', hi: 'शुभ प्रभात' },
+  'dashboard.goodAfternoon': { en: 'Good afternoon', ta: 'மதிய வணக்கம்', hi: 'शुभ दोपहर' },
+  'dashboard.goodEvening': { en: 'Good evening', ta: 'மாலை வணக்கம்', hi: 'शुभ संध्या' },
+  'dashboard.bannerTitle': { en: 'Diagnose Crop Health & Get Prescriptions', ta: 'பயிர் ஆரோக்கியத்தைக் கண்டறிந்து மருந்து ஆலோசனைகளைப் பெறுங்கள்', hi: 'फसल स्वास्थ्य की जाँच करें और उपचार पाएँ' },
+  'dashboard.bannerDesc': { en: 'Upload a clear field leaf photo to detect fungal, bacterial, or pest damage with verified chemical and organic treatment protocols.', ta: 'பூஞ்சை, பாக்டீரியா அல்லது பூச்சி பாதிப்புகளைக் கண்டறிய தெளிவான இலை புகைப்படத்தைப் பதிவேற்றி தகுந்த சிகிச்சையைப் பெறுங்கள்.', hi: 'फफूंद, बैक्टीरिया या कीट क्षति का पता लगाने और जैविक व रासायनिक उपचार पाने के लिए पत्ती की फोटो अपलोड करें।' },
+  'dashboard.uploadLeaf': { en: 'Upload Leaf & Begin Diagnosis', ta: 'இலையைப் பதிவேற்றி பரிசோதிக்கவும்', hi: 'पत्ती अपलोड करें और जाँच शुरू करें' },
+  'dashboard.talkDoctor': { en: 'Talk to Plant Doctor', ta: 'தாவர மருத்துவரிடம் பேசவும்', hi: 'पौधों के डॉक्टर से बात करें' },
+  'dashboard.myCrops': { en: 'My Crops', ta: 'என் பயிர்கள்', hi: 'मेरी फसलें' },
+  'dashboard.recentDiagnosis': { en: 'Recent Diagnosis', ta: 'சமீபத்திய நோயறிதல்', hi: 'हालिया निदान' },
+  'dashboard.diseaseRisk': { en: 'Disease Risk', ta: 'நோய் ஆபத்து', hi: 'रोग जोखिम' },
+  'dashboard.weather': { en: 'Weather', ta: 'வானிலை', hi: 'मौसम' },
+  'dashboard.healthy': { en: 'healthy', ta: 'ஆரோக்கியமானது', hi: 'स्वस्थ' },
+  'dashboard.noCrops': { en: 'No crops yet', ta: 'இன்னும் பயிர்கள் இல்லை', hi: 'अभी कोई फसल नहीं' },
+  'dashboard.noAssessments': { en: 'No assessments yet', ta: 'இன்னும் பரிசோதனைகள் இல்லை', hi: 'अभी कोई जाँच नहीं' },
+  'dashboard.confidence': { en: 'confidence', ta: 'நம்பிக்கை', hi: 'विश्वास' },
+  'dashboard.moderate': { en: 'Moderate', ta: 'மிதமானது', hi: 'मध्यम' },
+  'dashboard.low': { en: 'Low', ta: 'குறைவு', hi: 'कम' },
+  'dashboard.highHumidity': { en: 'High humidity advisory', ta: 'அதிக ஈரப்பதம் ஆலோசனை', hi: 'उच्च नमी सलाह' },
+  'dashboard.normalConditions': { en: 'Normal conditions', ta: 'இயல்பான நிலை', hi: 'सामान्य स्थिति' },
+  'dashboard.quickActions': { en: 'Quick actions', ta: 'விரைவு நடவடிக்கைகள்', hi: 'त्वरित कार्रवाई' },
+  'dashboard.rainProb': { en: 'rain prob.', ta: 'மழை வாய்ப்பு', hi: 'बारिश की संभावना' },
+
+  // My Crops Keys
+  'mycrops.add': { en: 'Add New Crop', ta: 'புதிய பயிரைச் சேர்க்கவும்', hi: 'नई फसल जोड़ें' },
+  'mycrops.totalParcels': { en: 'Total Parcels', ta: 'மொத்த நிலங்கள்', hi: 'कुल भूखंड' },
+  'mycrops.healthyCrops': { en: 'Healthy Crops', ta: 'ஆரோக்கியமான பயிர்கள்', hi: 'स्वस्थ फसलें' },
+  'mycrops.underMonitoring': { en: 'Under Monitoring', ta: 'கண்காணிப்பில் உள்ளவை', hi: 'निगरानी में' },
+
+  // History Keys
+  'history.subtitle': { en: 'All your crop assessments, saved in one place.', ta: 'உங்கள் அனைத்து பயிர் மதிப்பீடுகளும் ஒரே இடத்தில்.', hi: 'आपके सभी फसल मूल्यांकन, एक ही स्थान पर सहेजे गए।' },
+  'history.search': { en: 'Search diagnosis history', ta: 'நோயறிதல் வரலாற்றைத் தேடவும்', hi: 'निदान इतिहास खोजें' },
+  'history.allCrops': { en: 'All crops', ta: 'அனைத்து பயிர்கள்', hi: 'सभी फसलें' },
+  'history.allSeverity': { en: 'All severity', ta: 'அனைத்து நிலைகள்', hi: 'सभी गंभीरता' },
+  'history.emptyTitle': { en: 'No crop assessments yet.', ta: 'இன்னும் பயிர் மதிப்பீடுகள் இல்லை.', hi: 'अभी कोई फसल मूल्यांकन नहीं।' },
+  'history.emptyDesc': { en: 'Scan a crop to start building your history.', ta: 'வரலாற்றை உருவாக்க பயிரை ஸ்கேன் செய்யவும்.', hi: 'इतिहास बनाने के लिए फसल स्कैन करें।' },
+
+  // Scan & Camera Keys
+  'scan.title': { en: 'Scan Crop Leaf', ta: 'பயிர் இலையை ஸ்கேன் செய்யவும்', hi: 'फसल की पत्ती स्कैन करें' },
+  'scan.subtitle': { en: 'Take or upload a leaf photo to diagnose diseases.', ta: 'நோய்களைக் கண்டறிய இலை புகைப்படத்தை எடுக்கவும் அல்லது பதிவேற்றவும்.', hi: 'रोगों की पहचान के लिए पत्ती की फोटो लें या अपलोड करें।' },
+  'scan.step1': { en: 'Scan Leaf', ta: 'இலையை ஸ்கேன் செய்', hi: 'पत्ती स्कैन करें' },
+  'scan.step2': { en: 'Quality Check', ta: 'தரச் சரிபார்ப்பு', hi: 'गुणवत्ता जाँच' },
+  'scan.step3': { en: 'AI Analysis', ta: 'AI பகுப்பாய்வு', hi: 'AI विश्लेषण' },
+  'scan.activeCrop': { en: 'Active Crop', ta: 'செயலில் உள்ள பயிர்', hi: 'सक्रिय फसल' },
+  'scan.dragDrop': { en: 'Drag and drop your leaf photo here', ta: 'உங்கள் இலை புகைப்படத்தை இங்கே இழுத்து விடவும்', hi: 'अपनी पत्ती की फोटो यहाँ खींचें और छोड़ें' },
+  'scan.supportsFormat': { en: 'Supports high-resolution JPG or PNG', ta: 'உயர்தர JPG அல்லது PNG ஆதரிக்கப்படுகிறது', hi: 'उच्च गुणवत्ता वाली JPG या PNG समर्थित है' },
+  'scan.uploadGallery': { en: 'Upload from Gallery', ta: 'கேலரியிலிருந்து பதிவேற்றவும்', hi: 'गैलरी से अपलोड करें' },
+  'scan.scanWithCamera': { en: 'Scan with Camera', ta: 'கேமரா மூலம் ஸ்கேன் செய்யவும்', hi: 'कैमरे से स्कैन करें' },
+  'scan.scanWithCameraDesc': { en: 'Take a live photo of your crop to detect possible diseases.', ta: 'சாத்தியமான நோய்களைக் கண்டறிய உங்கள் பயிரின் நேரடி புகைப்படத்தை எடுக்கவும்.', hi: 'संभावित रोगों का पता लगाने के लिए फसल की लाइव फोटो लें।' },
+  'scan.live': { en: 'Live', ta: 'நேரலை', hi: 'लाइव' },
+  'scan.alignLeaf': { en: 'Align leaf inside the frame', ta: 'சட்டகத்திற்குள் இலையை சீரமைக்கவும்', hi: 'फ्रेम के अंदर पत्ती को संरेखित करें' },
+  'scan.switchCamera': { en: 'Switch camera', ta: 'கேமராவை மாற்றவும்', hi: 'कैमरा बदलें' },
+  'scan.cancel': { en: 'Cancel', ta: 'ரத்து செய்', hi: 'रद्द करें' },
+  'scan.tapToCapture': { en: 'Tap circle to capture', ta: 'படம் எடுக்க வட்டத்தைத் தட்டவும்', hi: 'फोटो लेने के लिए वृत्त पर टैप करें' },
+  'scan.retake': { en: 'Retake photo', ta: 'மீண்டும் படம் எடுக்கவும்', hi: 'फिर से फोटो लें' },
+  'scan.runAnalysis': { en: 'Analyze Image with AI', ta: 'AI மூலம் படத்தை பகுப்பாய்வு செய்யவும்', hi: 'AI के साथ छवि का विश्लेषण करें' },
+  'scan.analyzing': { en: 'Analyzing leaf...', ta: 'இலையை பகுப்பாய்வு செய்கிறது...', hi: 'पत्ती का विश्लेषण हो रहा है...' },
+  'scan.qualityTitle': { en: 'Image Quality Assessment', ta: 'படத்தின் தர மதிப்பீடு', hi: 'छवि गुणवत्ता मूल्यांकन' },
+  'scan.goodQuality': { en: 'Good Quality', ta: 'நல்ல தரம்', hi: 'अच्छी गुणवत्ता' },
+  'scan.fairQuality': { en: 'Fair Quality', ta: 'மிதமான தரம்', hi: 'मध्यम गुणवत्ता' },
+  'scan.poorQuality': { en: 'Poor Quality', ta: 'குறைந்த தரம்', hi: 'कम गुणवत्ता' },
+  'scan.resolutionOk': { en: 'Resolution acceptable', ta: 'பொருத்தமான தெளிவுத்திறன்', hi: 'स्वीकार्य रिज़ॉल्यूशन' },
+  'scan.brightnessOk': { en: 'Brightness acceptable', ta: 'பொருத்தமான வெளிச்சம்', hi: 'स्वीकार्य चमक' },
+  'scan.sharpnessOk': { en: 'Image sharpness', ta: 'படத்தின் தெளிவு', hi: 'छवि का तीखापन' },
+  'scan.leafDetected': { en: 'Leaf detected', ta: 'இலை கண்டறியப்பட்டது', hi: 'पत्ती पहचानी गई' },
+  'scan.formatOk': { en: 'Image format supported', ta: 'பட வடிவம் ஆதரிக்கப்படுகிறது', hi: 'छवि प्रारूप समर्थित' },
+
+  // AI Guide Keys
+  'guide.title': { en: 'AI Guide', ta: 'AI வழிகாட்டி', hi: 'AI मार्गदर्शक' },
+  'guide.listening': { en: 'Listening… speak naturally', ta: 'கேட்கிறேன்… இயல்பாகப் பேசுங்கள்', hi: 'सुन रहा हूँ… सामान्य रूप से बोलें' },
+  'guide.processing': { en: 'Processing your question...', ta: 'உங்கள் கேள்வியைச் செயலாக்குகிறது...', hi: 'आपके प्रश्न को समझ रहा है...' },
+  'guide.speak': { en: 'Speak', ta: 'பேசுங்கள்', hi: 'बोलें' },
+  'guide.stop': { en: 'Stop', ta: 'நிறுத்து', hi: 'रोकें' },
+  'guide.tryAgain': { en: 'Please try again', ta: 'மீண்டும் முயற்சிக்கவும்', hi: 'कृपया फिर से प्रयास करें' }
 };
 
 const LanguageContext = createContext({
@@ -783,6 +940,21 @@ export function LanguageProvider({ children }) {
     } catch {}
 
     setLangState(valid);
+
+    // Sync preference to backend if logged in
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        fetch('http://localhost:8000/api/auth/me', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ preferred_language: valid })
+        }).catch(() => {});
+      }
+    } catch {}
   };
 
   useEffect(() => {
@@ -791,6 +963,28 @@ export function LanguageProvider({ children }) {
       document.documentElement.dir = 'ltr';
     } catch {}
   }, [lang]);
+
+  // Initial backend sync if user has saved language preference
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        fetch('http://localhost:8000/api/auth/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+          .then((r) => r.ok ? r.json() : null)
+          .then((user) => {
+            if (user?.preferred_language && LANGUAGES.some(l => l.code === user.preferred_language)) {
+              if (user.preferred_language !== lang) {
+                setLangState(user.preferred_language);
+                try { localStorage.setItem('cc_lang', user.preferred_language); } catch {}
+              }
+            }
+          })
+          .catch(() => {});
+      }
+    } catch {}
+  }, []);
 
   /**
    * Safe translation lookup with guaranteed string fallback

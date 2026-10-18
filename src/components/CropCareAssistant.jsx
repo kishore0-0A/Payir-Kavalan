@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Bot, Mic, Send, Square, Volume2, X } from 'lucide-react';
+import { Bot, Mic, Send, Square, Volume2, X, ExternalLink } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import api from '@/api/apiClient';
@@ -166,6 +166,7 @@ export default function CropCareAssistant() {
   const [speaking, setSpeaking] = useState(false);
   const [heard, setHeard] = useState('');
   const [answer, setAnswer] = useState('');
+  const [actionData, setActionData] = useState(null);
   const [input, setInput] = useState('');
   const [voices, setVoices] = useState([]);
 
@@ -179,6 +180,7 @@ export default function CropCareAssistant() {
   const silenceTimerRef = useRef(null);
   const transcriptRef = useRef('');
   const requestIdRef = useRef(0);
+  const historyRef = useRef([]);
 
   // Sync assistant language with global language when global changes
   useEffect(() => {
@@ -283,13 +285,21 @@ export default function CropCareAssistant() {
       utterance.lang = ui?.speech || 'en-IN';
       const langPrefix = currentLang.toLowerCase();
 
-      const matchedVoice = (Array.isArray(voices) ? voices : []).find((v) => {
+      const availableVoices = Array.isArray(voices) ? voices : [];
+      const matchedVoice = availableVoices.find((v) => {
         const code = (v?.lang || '').toLowerCase().replace('_', '-');
-        return code.startsWith(langPrefix) || code.startsWith((ui?.speech || '').toLowerCase());
+        const name = (v?.name || '').toLowerCase();
+        if (langPrefix === 'ta') {
+          return code.startsWith('ta') || name.includes('tamil') || name.includes('தமிழ்');
+        }
+        if (langPrefix === 'hi') {
+          return code.startsWith('hi') || name.includes('hindi') || name.includes('हिन्दी');
+        }
+        return code.startsWith('en-in') || code.startsWith('en');
       }) || null;
 
       if (matchedVoice) utterance.voice = matchedVoice;
-      utterance.rate = 0.94;
+      utterance.rate = 0.95;
       utterance.onstart = () => { if (isMountedRef.current) setSpeaking(true); };
       utterance.onend = () => { if (isMountedRef.current) setSpeaking(false); };
       utterance.onerror = () => { if (isMountedRef.current) setSpeaking(false); };
@@ -300,51 +310,74 @@ export default function CropCareAssistant() {
     }
   }, [currentLang, ui?.speech, voices]);
 
+  const changeLanguage = useCallback((next) => {
+    stop();
+    const safeNext = LANGUAGES[next] ? next : 'en';
+    setLanguage(safeNext);
+    setActionData(null);
+    if (setGlobalLang) {
+      setGlobalLang(safeNext);
+    }
+  }, [setGlobalLang, stop]);
+
   const ask = useCallback(async (question) => {
     if (!question || !question.trim()) return;
     const trimmed = question.trim();
-    if (isMountedRef.current) setHeard(trimmed);
+    if (isMountedRef.current) {
+      setHeard(trimmed);
+      setActionData(null);
+    }
 
     const reqId = ++requestIdRef.current;
     const safeLang = currentLang;
 
-    // 1. Check local page navigation & instant command matches
-    const localResult = replyTo(trimmed, safeLang);
-    const replyText = localResult?.text || '';
-    const isDefaultFallback =
-      replyText.includes('I am your CropCare friend and guide') ||
-      replyText.includes('நான் உங்கள் பயிர் காவலன் நண்பன்') ||
-      replyText.includes('मैं आपका क्रॉपकेयर मित्र');
-
-    if (localResult?.route || !isDefaultFallback) {
-      if (isMountedRef.current && reqId === requestIdRef.current) {
-        setAnswer(replyText);
-        say(replyText);
-        if (localResult?.route) setTimeout(() => navigate(localResult.route), 450);
-      }
-      return;
-    }
-
-    // 2. Query backend AI assistant for agronomic & general farming intelligence
+    // 1. Send query to backend assistant engine with conversation history
     try {
-      const res = await api.voice.chat(trimmed, safeLang);
+      const res = await api.voice.chat(trimmed, safeLang, historyRef.current);
       if (reqId !== requestIdRef.current || !isMountedRef.current) return;
       if (res && res.reply) {
+        // Update conversation context
+        historyRef.current = [
+          ...historyRef.current.slice(-6),
+          { role: 'user', content: trimmed },
+          { role: 'assistant', content: res.reply }
+        ];
+
         setAnswer(res.reply);
+        setActionData(res.action_data || null);
         say(res.reply);
-        if (res.route) setTimeout(() => navigate(res.route), 450);
+
+        // Execute actions when requested & verified
+        if (res.action === 'change_language' && res.action_data?.language) {
+          changeLanguage(res.action_data.language);
+        } else if (res.action === 'open_url' && res.action_data?.url) {
+          try {
+            window.open(res.action_data.url, '_blank', 'noopener,noreferrer');
+          } catch (e) {
+            console.warn("Popup blocked or failed to auto-open URL:", e);
+          }
+        } else if (res.route || res.action === 'navigate') {
+          const targetRoute = res.route || res.action_data?.route;
+          if (targetRoute) {
+            setTimeout(() => navigate(targetRoute), 450);
+          }
+        }
         return;
       }
     } catch (err) {
-      console.warn("Backend chat query failed, using local guide:", err);
+      console.warn("Backend chat query failed, using local offline guide:", err);
     }
 
-    // 3. Fallback to local default guidance
+    // 2. Offline fallback to local guide
+    const localResult = replyTo(trimmed, safeLang);
+    const replyText = localResult?.text || '';
     if (reqId === requestIdRef.current && isMountedRef.current) {
       setAnswer(replyText);
+      setActionData(null);
       say(replyText);
+      if (localResult?.route) setTimeout(() => navigate(localResult.route), 450);
     }
-  }, [currentLang, navigate, say]);
+  }, [changeLanguage, currentLang, navigate, say]);
 
   // Option B: Backend speech-to-text recording fallback
   const startBackendRecording = useCallback(async () => {
@@ -544,15 +577,6 @@ export default function CropCareAssistant() {
     await startBackendRecording();
   };
 
-  const changeLanguage = (next) => {
-    stop();
-    const safeNext = LANGUAGES[next] ? next : 'en';
-    setLanguage(safeNext);
-    if (setGlobalLang) {
-      setGlobalLang(safeNext);
-    }
-  };
-
   return (
     <div className="fixed bottom-5 right-5 z-[9999] font-sans">
       {open && (
@@ -586,7 +610,29 @@ export default function CropCareAssistant() {
                 {listening ? ui.listening : `Current page: ${location.pathname}`}
               </p>
               {heard && <p className="mb-2 rounded-lg bg-white p-2 text-slate-600"><b>You:</b> {heard}</p>}
-              {answer ? <p className="rounded-lg bg-emerald-50 p-2 leading-relaxed text-slate-800"><b>Guide:</b> {answer}</p> : <p className="text-slate-500">{ui.prompt}</p>}
+              {answer ? (
+                <div className="rounded-lg bg-emerald-50 p-2.5 leading-relaxed text-slate-800">
+                  <p className="whitespace-pre-line"><b>Guide:</b> {answer}</p>
+                  {actionData?.url && (
+                    <div className="mt-2.5 pt-2 border-t border-emerald-200/70 flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-semibold text-emerald-900 truncate">
+                        {actionData.target || actionData.destination || 'Open Link'}
+                      </span>
+                      <a
+                        href={actionData.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm transition shrink-0"
+                      >
+                        <span>Open</span>
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-slate-500">{ui.prompt}</p>
+              )}
             </div>
             <form onSubmit={(event) => { event.preventDefault(); ask(input); setInput(''); }} className="mt-3 flex gap-2">
               <input

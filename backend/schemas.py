@@ -176,14 +176,18 @@ class ChatMessage(BaseModel):
     content: str
 
 class ChatQuery(BaseModel):
-    message: str
+    message: Optional[str] = None
+    query: Optional[str] = None
     language: Optional[str] = "en"
-    history: Optional[List[ChatMessage]] = []
+    history: Optional[List[Any]] = []
 
 class ChatResponse(BaseModel):
     reply: str
     route: Optional[str] = None
+    action: Optional[str] = None
+    action_data: Optional[Dict[str, Any]] = None
     language: str
+    intent: Optional[str] = "general_question"
 
 
 class ReminderBase(BaseModel):

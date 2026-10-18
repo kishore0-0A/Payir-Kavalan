@@ -2,16 +2,18 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Sprout, ScanLine, History, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/i18n';
 
 const ITEMS = [
-  { label: 'Home', to: '/dashboard', icon: Home },
-  { label: 'Crops', to: '/my-crops', icon: Sprout },
-  { label: 'Scan', to: '/scan', icon: ScanLine, center: true },
-  { label: 'History', to: '/history', icon: History },
-  { label: 'Profile', to: '/profile', icon: User }
+  { id: 'dashboard', label: 'Home', to: '/dashboard', icon: Home },
+  { id: 'myCrops', label: 'Crops', to: '/my-crops', icon: Sprout },
+  { id: 'scan', label: 'Scan', to: '/scan', icon: ScanLine, center: true },
+  { id: 'history', label: 'History', to: '/history', icon: History },
+  { id: 'profile', label: 'Profile', to: '/profile', icon: User }
 ];
 
 export default function MobileBottomNav() {
+  const { t } = useLanguage();
   const location = useLocation();
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 backdrop-blur-md lg:hidden">
@@ -28,7 +30,7 @@ export default function MobileBottomNav() {
                 )}>
                   <Icon className="h-6 w-6" />
                 </span>
-                <span className="mt-1 text-[11px] font-semibold text-primary">{item.label}</span>
+                <span className="mt-1 text-[11px] font-semibold text-primary">{t('nav.' + item.id, item.label)}</span>
               </Link>
             );
           }
@@ -39,7 +41,7 @@ export default function MobileBottomNav() {
               className="flex flex-1 flex-col items-center gap-1 py-2.5"
             >
               <Icon className={cn('h-5 w-5', active ? 'text-primary' : 'text-muted-foreground')} />
-              <span className={cn('text-[11px] font-medium', active ? 'text-primary' : 'text-muted-foreground')}>{item.label}</span>
+              <span className={cn('text-[11px] font-medium', active ? 'text-primary' : 'text-muted-foreground')}>{t('nav.' + item.id, item.label)}</span>
             </Link>
           );
         })}

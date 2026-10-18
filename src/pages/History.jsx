@@ -6,8 +6,10 @@ import { SUPPORTED_CROPS } from '@/lib/cropData';
 import SeverityBadge from '@/components/SeverityBadge';
 import EmptyState from '@/components/EmptyState';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/i18n';
 
 export default function History() {
+  const { t } = useLanguage();
   const [diagnoses, setDiagnoses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -31,21 +33,21 @@ export default function History() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:px-8">
       <div className="mb-6 fade-up">
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl font-display">Diagnosis History</h1>
-        <p className="mt-1 text-muted-foreground">All your crop assessments, saved in one place.</p>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl font-display">{t('nav.history', 'Diagnosis History')}</h1>
+        <p className="mt-1 text-muted-foreground">{t('history.subtitle', 'All your crop assessments, saved in one place.')}</p>
       </div>
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center fade-up-1">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search diagnosis history" className="w-full rounded-xl border border-input bg-card py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('history.search', 'Search diagnosis history')} className="w-full rounded-xl border border-input bg-card py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </div>
         <select value={cropFilter} onChange={(e) => setCropFilter(e.target.value)} className="rounded-xl border border-input bg-card px-3 py-2.5 text-sm focus:border-primary focus:outline-none">
-          <option value="">All crops</option>
+          <option value="">{t('history.allCrops', 'All crops')}</option>
           {SUPPORTED_CROPS.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
         </select>
         <select value={severityFilter} onChange={(e) => setSeverityFilter(e.target.value)} className="rounded-xl border border-input bg-card px-3 py-2.5 text-sm focus:border-primary focus:outline-none">
-          <option value="">All severity</option>
+          <option value="">{t('history.allSeverity', 'All severity')}</option>
           <option value="mild">Mild</option>
           <option value="moderate">Moderate</option>
           <option value="severe">Severe</option>
@@ -56,7 +58,7 @@ export default function History() {
         <div className="space-y-3">{[0,1,2].map((i) => <div key={i} className="h-20 animate-pulse rounded-2xl bg-muted" />)}</div>
       ) : filtered.length === 0 ? (
         <div className="fade-up-2">
-          <EmptyState icon={HistoryIcon} title="No crop assessments yet." description="Scan a crop to start building your history." action={<Link to="/scan" className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 shadow-md">Check Your Crop</Link>} />
+          <EmptyState icon={HistoryIcon} title={t('history.emptyTitle', 'No crop assessments yet.')} description={t('history.emptyDesc', 'Scan a crop to start building your history.')} action={<Link to="/scan" className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 shadow-md">Check Your Crop</Link>} />
         </div>
       ) : (
         <div className="space-y-3">

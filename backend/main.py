@@ -18,6 +18,7 @@ import auth
 from database import engine, get_db, sync_schema
 import ml_service
 import stt_service
+import assistant_service
 
 # Create all tables in the database
 models.Base.metadata.create_all(bind=engine)
@@ -68,6 +69,11 @@ def get_optional_user(credentials: Optional[HTTPAuthorizationCredentials] = Depe
     except Exception:
         pass
     return None
+
+
+@app.get("/")
+def root_health():
+    return {"status": "ok", "app": "CropCare AI (Payir Kaavalan) API"}
 
 
 # ==========================================
@@ -804,6 +810,7 @@ def update_expert_review(review_id: str, data: schemas.ExpertReviewUpdate, curre
 # ==============================================================================
 
 @app.post("/api/transcribe")
+@app.post("/api/voice/transcribe")
 async def transcribe_audio(
     file: UploadFile = File(...),
     language: Optional[str] = Form("en")
@@ -841,72 +848,25 @@ async def transcribe_audio(
 
 
 @app.post("/api/assistant/chat", response_model=schemas.ChatResponse)
+@app.post("/api/voice/chat", response_model=schemas.ChatResponse)
 def assistant_chat(query: schemas.ChatQuery, db: Session = Depends(get_db)):
     """
-    AI Assistant backend that handles farmer voice & text queries in Tamil, Hindi, and English.
-    Integrates crop care advice, disease knowledge base, and general agricultural queries.
+    Intelligent Multilingual Action & Guidance Assistant:
+    - Accepts voice & text queries in Tamil, English, and Hindi.
+    - Answers agriculture, technology, general science, procedural how-to questions.
+    - Executes actions (opening websites, in-app navigation, language switching) when authorized.
     """
-    msg = query.message.strip()
-    lang = (query.language or "en").lower().split("-")[0]
-    if lang not in ["en", "ta", "hi"]:
-        lang = "en"
-
-    # Check for direct disease mentions from knowledge base
-    matched_disease = None
-    msg_lower = msg.lower()
-    for key, info in ml_service.DISEASE_KNOWLEDGE.items():
-        name_lower = info.get("name", "").lower()
-        short_lower = info.get("short_name", "").lower()
-        if (short_lower and short_lower in msg_lower) or (name_lower and name_lower in msg_lower):
-            matched_disease = info
-            break
-
-    if matched_disease:
-        if lang == "ta":
-            reply = f"{matched_disease['name']} பற்றிய வழிகாட்டல்: {matched_disease['treatment']} தடுப்பு முறை: {matched_disease['prevention']}"
-        elif lang == "hi":
-            reply = f"{matched_disease['name']} के लिए सलाह: {matched_disease['treatment']} रोकथाम: {matched_disease['prevention']}"
-        else:
-            reply = f"Guidance for {matched_disease['name']}: {matched_disease['treatment']} Prevention: {matched_disease['prevention']}"
-        return schemas.ChatResponse(reply=reply, route="/knowledge", language=lang)
-
-    # Check for external LLM API if key is available
-    groq_api_key = os.getenv("GROQ_API_KEY")
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if groq_api_key or openai_api_key:
-        try:
-            api_key = groq_api_key or openai_api_key
-            endpoint = "https://api.groq.com/openai/v1/chat/completions" if groq_api_key else "https://api.openai.com/v1/chat/completions"
-            model = "llama-3.1-8b-instant" if groq_api_key else "gpt-3.5-turbo"
-            system_prompt = (
-                "You are CropCare AI (Payir Kaavalan), an intelligent agricultural assistant for Indian farmers. "
-                "Provide helpful, concise farming and crop health guidance. "
-                "Answer in the same language as the user's prompt (Tamil, Hindi, or English). "
-                "Do not prescribe hazardous pesticides without label verification. Keep response under 3 sentences for clear voice playback."
-            )
-            messages = [{"role": "system", "content": system_prompt}]
-            for h in (query.history or [])[-4:]:
-                messages.append({"role": h.role, "content": h.content})
-            messages.append({"role": "user", "content": msg})
-
-            req_data = json.dumps({"model": model, "messages": messages, "max_tokens": 160}).encode("utf-8")
-            req = urllib.request.Request(endpoint, data=req_data, headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            })
-            with urllib.request.urlopen(req, timeout=8) as resp:
-                res_json = json.loads(resp.read().decode("utf-8"))
-                reply_text = res_json["choices"][0]["message"]["content"].strip()
-                return schemas.ChatResponse(reply=reply_text, route=None, language=lang)
-        except Exception:
-            pass
-
-    # Standard rule-based fallback response
-    if lang == "ta":
-        reply = "உங்கள் கேள்வியைப் பெற்றேன். பயிர் இலைகளை ஸ்கேன் செய்ய 'பயிர் ஸ்கேன்' திறக்கலாம் அல்லது வேளாண் நிபுணரிடம் ஆலோசனை பெறலாம்."
-    elif lang == "hi":
-        reply = "मुझे आपका प्रश्न मिला। फसल की पत्ती स्कैन करने के लिए 'क्रॉप स्कैन' खोलें या कृषि विशेषज्ञ से परामर्श लें।"
-    else:
-        reply = "I received your question. You can use 'Crop Scan' to analyze leaf diseases or consult an agricultural expert for personalized care."
-
-    return schemas.ChatResponse(reply=reply, route=None, language=lang)
+    user_msg = query.message or query.query or ""
+    res = assistant_service.process_assistant_chat(
+        message=user_msg,
+        requested_lang=query.language or "en",
+        history=query.history or []
+    )
+    return schemas.ChatResponse(
+        reply=res.get("reply", ""),
+        route=res.get("route"),
+        action=res.get("action"),
+        action_data=res.get("action_data"),
+        language=res.get("language", query.language or "en"),
+        intent=res.get("intent", "general_question")
+    )

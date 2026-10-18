@@ -12,7 +12,7 @@ export default function Profile() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { speak, supported } = useVoice();
-  const { lang, setLang, languages } = useLanguage();
+  const { lang, setLang, languages, t } = useLanguage();
   const online = useOnline();
 
   const [user, setUser] = useState(null);
@@ -46,7 +46,7 @@ export default function Profile() {
     e.preventDefault();
     setSaving(true);
     try {
-      await base44.auth.updateMe({ full_name: form.full_name, mobile: form.mobile, village: form.village, primary_crop: form.primary_crop, role: form.role });
+      await base44.auth.updateMe({ full_name: form.full_name, mobile: form.mobile, village: form.village, primary_crop: form.primary_crop, role: form.role, preferred_language: lang });
       const updated = await base44.auth.me();
       setUser(updated);
       toast({ title: 'Profile updated' });
@@ -75,14 +75,14 @@ export default function Profile() {
   const logout = async () => { await base44.auth.logout(); navigate('/login'); };
 
   const toggles = [
-    { key: 'inspection', label: 'Crop inspection reminders', desc: 'Reminders to check your crops.' },
-    { key: 'weather', label: 'Weather alerts', desc: 'Rain, heat and humidity advisories.' },
-    { key: 'risk', label: 'Disease-risk notifications', desc: 'Advisories when conditions favour disease.' }
+    { key: 'inspection', label: t('profile.inspectionReminder', 'Crop inspection reminders'), desc: t('profile.inspectionReminderDesc', 'Reminders to check your crops.') },
+    { key: 'weather', label: t('profile.weatherAlerts', 'Weather alerts'), desc: t('profile.weatherAlertsDesc', 'Rain, heat and humidity advisories.') },
+    { key: 'risk', label: t('profile.riskAlerts', 'Disease-risk notifications'), desc: t('profile.riskAlertsDesc', 'Advisories when conditions favour disease.') }
   ];
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6 lg:px-8">
-      <h1 className="mb-6 text-2xl font-bold tracking-tight sm:text-3xl font-display fade-up">Account & Settings</h1>
+      <h1 className="mb-6 text-2xl font-bold tracking-tight sm:text-3xl font-display fade-up">{t('profile.title', 'Account & Settings')}</h1>
 
       {/* Header Profile */}
       <div className="mb-6 flex items-center gap-4 rounded-2xl border border-white/20 glass p-5 shadow-soft hover-pop fade-up-1">
@@ -90,7 +90,7 @@ export default function Profile() {
           {(form.full_name || user?.email || 'F').charAt(0).toUpperCase()}
         </div>
         <div>
-          <p className="text-lg font-semibold">{form.full_name || 'Farmer'}</p>
+          <p className="text-lg font-semibold">{form.full_name || t('profile.farmer', 'Farmer')}</p>
           <p className="text-sm text-muted-foreground">{user?.email}</p>
           <span className="mt-1 inline-block rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold capitalize text-primary">{user?.role || 'user'}</span>
         </div>
@@ -100,47 +100,47 @@ export default function Profile() {
       <div className="mb-6 grid grid-cols-2 gap-4 fade-up-1">
         <div className="rounded-2xl border border-white/20 glass p-5 shadow-soft hover-pop flex items-center gap-4">
           <div className="bg-primary/10 p-3 rounded-full"><Sprout className="h-6 w-6 text-primary" /></div>
-          <div><p className="text-2xl font-bold">{totalCrops}</p><p className="text-sm text-muted-foreground">Total Crops</p></div>
+          <div><p className="text-2xl font-bold">{totalCrops}</p><p className="text-sm text-muted-foreground">{t('profile.totalCrops', 'Total Crops')}</p></div>
         </div>
         <div className="rounded-2xl border border-white/20 glass p-5 shadow-soft hover-pop flex items-center gap-4">
           <div className="bg-primary/10 p-3 rounded-full"><ScanLine className="h-6 w-6 text-primary" /></div>
-          <div><p className="text-2xl font-bold">{totalScans}</p><p className="text-sm text-muted-foreground">AI Scans</p></div>
+          <div><p className="text-2xl font-bold">{totalScans}</p><p className="text-sm text-muted-foreground">{t('profile.aiScans', 'AI Scans')}</p></div>
         </div>
       </div>
 
       {/* Profile Form */}
-      <h2 className="mb-3 text-lg font-semibold fade-up-2">Personal Details</h2>
+      <h2 className="mb-3 text-lg font-semibold fade-up-2">{t('profile.personalDetails', 'Personal Details')}</h2>
       <form onSubmit={saveProfile} className="mb-8 space-y-4 rounded-2xl border border-white/20 glass p-6 shadow-2xl fade-up-2 hover-pop">
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><User className="h-4 w-4 text-muted-foreground" /> Full name</label>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><User className="h-4 w-4 text-muted-foreground" /> {t('profile.fullName', 'Full name')}</label>
           <input value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </div>
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Mail className="h-4 w-4 text-muted-foreground" /> Email</label>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Mail className="h-4 w-4 text-muted-foreground" /> {t('profile.email', 'Email')}</label>
           <input value={user?.email || ''} disabled className="w-full rounded-lg border border-input bg-muted px-4 py-2.5 text-sm text-muted-foreground" />
         </div>
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Phone className="h-4 w-4 text-muted-foreground" /> Mobile number</label>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Phone className="h-4 w-4 text-muted-foreground" /> {t('profile.mobile', 'Mobile number')}</label>
           <input value={form.mobile} onChange={(e) => setForm({ ...form, mobile: e.target.value })} placeholder="+91 90000 00000" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </div>
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><MapPin className="h-4 w-4 text-muted-foreground" /> Location</label>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><MapPin className="h-4 w-4 text-muted-foreground" /> {t('profile.location', 'Location')}</label>
           <input value={form.village} onChange={(e) => setForm({ ...form, village: e.target.value })} placeholder="Village, District, State" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </div>
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Sprout className="h-4 w-4 text-muted-foreground" /> Primary crop</label>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Sprout className="h-4 w-4 text-muted-foreground" /> {t('profile.primaryCrop', 'Primary crop')}</label>
           <input value={form.primary_crop} onChange={(e) => setForm({ ...form, primary_crop: e.target.value })} placeholder="e.g. Tomato" className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </div>
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><User className="h-4 w-4 text-muted-foreground" /> Account Type</label>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><User className="h-4 w-4 text-muted-foreground" /> {t('profile.accountType', 'Account Type')}</label>
           <select
             value={form.role}
             onChange={(e) => setForm({ ...form, role: e.target.value })}
             className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
-            <option value="farmer">Farmer — Crop health & AI diagnosis</option>
-            <option value="expert">Agricultural Expert — Case reviews & advisory</option>
-            <option value="admin">Administrator — System operations & management</option>
+            <option value="farmer">{t('profile.roleFarmer', 'Farmer — Crop health & AI diagnosis')}</option>
+            <option value="expert">{t('profile.roleExpert', 'Agricultural Expert — Case reviews & advisory')}</option>
+            <option value="admin">{t('profile.roleAdmin', 'Administrator — System operations & management')}</option>
           </select>
         </div>
         {user?.role === 'expert' && (
@@ -158,29 +158,29 @@ export default function Profile() {
             </button>
           </div>
         )}
-        <button type="submit" disabled={saving} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60"><Save className="h-4 w-4" /> {saving ? 'Saving...' : 'Save Profile'}</button>
+        <button type="submit" disabled={saving} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60"><Save className="h-4 w-4" /> {saving ? t('profile.saving', 'Saving...') : t('profile.saveProfile', 'Save Profile')}</button>
       </form>
 
       {/* Security (Change Password) */}
-      <h2 className="mb-3 text-lg font-semibold fade-up-2">Security</h2>
+      <h2 className="mb-3 text-lg font-semibold fade-up-2">{t('profile.security', 'Security')}</h2>
       <form onSubmit={changePassword} className="mb-8 space-y-4 rounded-2xl border border-white/20 glass p-6 shadow-2xl fade-up-2 hover-pop">
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Lock className="h-4 w-4 text-muted-foreground" /> Current Password</label>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Lock className="h-4 w-4 text-muted-foreground" /> {t('profile.currentPassword', 'Current Password')}</label>
           <input type="password" value={passForm.old_password} onChange={(e) => setPassForm({ ...passForm, old_password: e.target.value })} className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </div>
         <div>
-          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Lock className="h-4 w-4 text-muted-foreground" /> New Password</label>
+          <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium"><Lock className="h-4 w-4 text-muted-foreground" /> {t('profile.newPassword', 'New Password')}</label>
           <input type="password" value={passForm.new_password} onChange={(e) => setPassForm({ ...passForm, new_password: e.target.value })} className="w-full rounded-lg border border-input bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </div>
-        <button type="submit" disabled={savingPass} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary/10 text-primary px-5 py-3 font-semibold hover:bg-primary/20 disabled:opacity-60">{savingPass ? 'Updating...' : 'Change Password'}</button>
+        <button type="submit" disabled={savingPass} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary/10 text-primary px-5 py-3 font-semibold hover:bg-primary/20 disabled:opacity-60">{savingPass ? t('profile.updatingPassword', 'Updating...') : t('profile.changePassword', 'Change Password')}</button>
       </form>
 
       {/* Preferences merged from Settings */}
-      <h2 className="mb-3 text-lg font-semibold fade-up-3">Preferences</h2>
+      <h2 className="mb-3 text-lg font-semibold fade-up-3">{t('profile.preferences', 'Preferences')}</h2>
 
       <div className="mb-5 rounded-2xl border border-white/20 glass p-5 shadow-soft hover-pop fade-up-3">
-        <h2 className="flex items-center gap-2 font-semibold"><Globe className="h-5 w-5 text-primary" /> Display Language</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Select your preferred language for the entire platform.</p>
+        <h2 className="flex items-center gap-2 font-semibold"><Globe className="h-5 w-5 text-primary" /> {t('profile.displayLanguage', 'Display Language')}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{t('profile.displayLanguageDesc', 'Select your preferred language for the entire platform.')}</p>
         <div className="mt-4">
           <select 
             value={lang} 
@@ -195,16 +195,16 @@ export default function Profile() {
       </div>
 
       <div className="mb-5 rounded-2xl border border-white/20 glass p-5 shadow-soft hover-pop fade-up-3">
-        <h2 className="flex items-center gap-2 font-semibold"><Volume2 className="h-5 w-5 text-primary" /> Voice assistance</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Listen to results and guidance aloud using your device's text-to-speech.</p>
-        <button onClick={() => { speak('Voice assistance is working.'); toast({ title: 'Playing sample' }); }} disabled={!supported} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary/10 px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/20 disabled:opacity-50">
-          <Play className="h-4 w-4" /> Test voice
+        <h2 className="flex items-center gap-2 font-semibold"><Volume2 className="h-5 w-5 text-primary" /> {t('profile.voiceAssistance', 'Voice assistance')}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{t('profile.voiceAssistanceDesc', "Listen to results and guidance aloud using your device's text-to-speech.")}</p>
+        <button onClick={() => { speak(t('profile.voiceSample', 'Voice assistance is working properly.')); toast({ title: t('profile.playingSample', 'Playing sample') }); }} disabled={!supported} className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary/10 px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/20 disabled:opacity-50">
+          <Play className="h-4 w-4" /> {t('profile.testVoice', 'Test voice')}
         </button>
-        {!supported && <p className="mt-2 text-xs text-muted-foreground">Voice is not supported on this device.</p>}
+        {!supported && <p className="mt-2 text-xs text-muted-foreground">{t('profile.voiceUnsupported', 'Voice is not supported on this device.')}</p>}
       </div>
 
       <div className="mb-5 rounded-2xl border border-white/20 glass p-5 shadow-soft hover-pop fade-up-3">
-        <h2 className="flex items-center gap-2 font-semibold"><BellRing className="h-5 w-5 text-primary" /> Alert preferences</h2>
+        <h2 className="flex items-center gap-2 font-semibold"><BellRing className="h-5 w-5 text-primary" /> {t('profile.alertPreferences', 'Alert preferences')}</h2>
         <div className="mt-4 space-y-3">
           {toggles.map((t) => (
             <label key={t.key} className="flex items-center justify-between rounded-xl border border-border p-4">
@@ -218,17 +218,17 @@ export default function Profile() {
       </div>
 
       <div className="mb-8 rounded-2xl border border-white/20 glass p-5 shadow-soft hover-pop fade-up-3">
-        <h2 className="flex items-center gap-2 font-semibold"><WifiOff className="h-5 w-5 text-primary" /> Connectivity</h2>
+        <h2 className="flex items-center gap-2 font-semibold"><WifiOff className="h-5 w-5 text-primary" /> {t('profile.connectivity', 'Connectivity')}</h2>
         <div className="mt-3 flex items-center gap-2">
           <span className={cn('h-2.5 w-2.5 rounded-full', online ? 'bg-success' : 'bg-destructive')} />
-          <span className="text-sm font-medium">{online ? 'Online' : 'Offline mode'}</span>
+          <span className="text-sm font-medium">{online ? t('profile.online', 'Online') : t('profile.offlineMode', 'Offline mode')}</span>
         </div>
-        <p className="mt-2 text-sm text-muted-foreground">When offline, you can view saved diagnoses and crops, and queue scans for later.</p>
+        <p className="mt-2 text-sm text-muted-foreground">{t('profile.offlineDesc', 'When offline, you can view saved diagnoses and crops, and queue scans for later.')}</p>
       </div>
 
       <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/20 glass p-5 shadow-soft hover-pop fade-up-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground"><ShieldCheck className="h-4 w-4 text-primary" /> Your data is private.</div>
-        <button onClick={logout} className="inline-flex items-center gap-2 rounded-xl border border-destructive/30 px-4 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive/10"><LogOut className="h-4 w-4" /> Sign out</button>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground"><ShieldCheck className="h-4 w-4 text-primary" /> {t('profile.privateData', 'Your data is private.')}</div>
+        <button onClick={logout} className="inline-flex items-center gap-2 rounded-xl border border-destructive/30 px-4 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive/10"><LogOut className="h-4 w-4" /> {t('profile.signOut', 'Sign out')}</button>
       </div>
     </div>
   );

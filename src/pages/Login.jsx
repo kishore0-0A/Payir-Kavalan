@@ -8,8 +8,10 @@ import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
+import { useLanguage } from "@/lib/i18n";
 
 export default function Login() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -47,16 +49,16 @@ export default function Login() {
   return (
     <AuthLayout
       icon={LogIn}
-      title="Welcome back"
-      subtitle="Log in to your account"
+      title={t('auth.welcomeBack', 'Welcome back')}
+      subtitle={t('auth.loginSubtitle', 'Log in to your account')}
       footer={
         <>
-          Don't have an account?{" "}
+          {t('auth.noAccount', "Don't have an account?")}{" "}
           <Link
             to={"/register" + (returnTo !== "/" ? "?returnTo=" + encodeURIComponent(returnTo) : "")}
             className="text-primary font-medium hover:underline"
           >
-            Create one
+            {t('auth.createOne', 'Create one')}
           </Link>
         </>
       }
@@ -67,7 +69,7 @@ export default function Login() {
         onClick={handleGoogle}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
-        Continue with Google
+        {t('auth.continueGoogle', 'Continue with Google')}
       </Button>
 
       <div className="relative mb-6">
@@ -75,7 +77,7 @@ export default function Login() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-3 text-muted-foreground">or</span>
+          <span className="bg-card px-3 text-muted-foreground">{t('auth.or', 'or')}</span>
         </div>
       </div>
 
@@ -87,7 +89,7 @@ export default function Login() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t('auth.email', 'Email')}</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
             <Input
@@ -105,7 +107,7 @@ export default function Login() {
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t('auth.password', 'Password')}</Label>
             <Link to="/forgot-password" className="text-xs text-primary hover:underline">
               Forgot password?
             </Link>
@@ -128,10 +130,10 @@ export default function Login() {
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Logging in...
+              {t('auth.loggingIn', 'Logging in...')}
             </>
           ) : (
-            "Log in"
+            t('auth.logIn', 'Log in')
           )}
         </Button>
       </form>
