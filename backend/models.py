@@ -114,3 +114,33 @@ class Disease(Base):
     last_updated = Column(String, nullable=True)
     created_date = Column(DateTime(timezone=True), server_default=func.now())
 
+
+class Reminder(Base):
+    __tablename__ = "reminders"
+
+    id = Column(String, primary_key=True, index=True)
+    crop_id = Column(String, nullable=True)
+    crop_name = Column(String, nullable=True)
+    title = Column(String, nullable=True)
+    reminder_date = Column(String, nullable=True)
+    status = Column(String, default="pending")
+    notes = Column(Text, nullable=True)
+    owner_id = Column(String, ForeignKey("users.id"), nullable=True)
+    created_date = Column(DateTime(timezone=True), server_default=func.now())
+
+    owner = relationship("User")
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id = Column(String, primary_key=True, index=True)
+    type = Column(String, default="advisory")
+    title = Column(String)
+    message = Column(Text)
+    read = Column(Boolean, default=False)
+    owner_id = Column(String, ForeignKey("users.id"), nullable=True)
+    created_date = Column(DateTime(timezone=True), server_default=func.now())
+
+    owner = relationship("User")
+

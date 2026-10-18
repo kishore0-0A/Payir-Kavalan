@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, MapPin, Phone, Mail, Sprout, Save, LogOut, ShieldCheck, Lock, Activity, ScanLine, Volume2, BellRing, WifiOff, Play, Globe } from 'lucide-react';
+import { User, MapPin, Phone, Mail, Sprout, Save, LogOut, ShieldCheck, Lock, ScanLine, Volume2, BellRing, WifiOff, Play, Globe } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import { useToast } from '@/components/ui/use-toast';
 import { useVoice } from '@/lib/voice';

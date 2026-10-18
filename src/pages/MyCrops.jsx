@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Sprout, Plus, ScanLine, Pencil, Trash2, MapPin, Calendar, Ruler,
-  Eye, X, ShieldCheck, AlertCircle, Sparkles, FileText, CheckCircle2
+  Eye, X
 } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import { SUPPORTED_CROPS } from '@/lib/cropData';

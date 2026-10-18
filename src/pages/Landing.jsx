@@ -18,7 +18,6 @@ import {
   Zap
 } from 'lucide-react';
 
-import { SUPPORTED_CROPS } from '@/lib/cropData';
 import { useLanguage } from '@/lib/i18n';
 
 const TRUST = [

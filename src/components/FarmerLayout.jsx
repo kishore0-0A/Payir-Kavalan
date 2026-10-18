@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   Leaf, LayoutDashboard, Sprout, ScanLine, History, Stethoscope,
-  Bell, CalendarClock, BookOpen, User, Settings, LogOut, Menu, X, ChevronRight
+  Bell, BookOpen, User, LogOut, Menu, X
 } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
 import base44 from '@/api/apiClient';
 import { cn } from '@/lib/utils';
 import LanguageSelector from '@/components/LanguageSelector';

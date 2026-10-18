@@ -3,8 +3,6 @@ import { ScanLine, Search } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import EmptyState from '@/components/EmptyState';
 import SeverityBadge from '@/components/SeverityBadge';
-import DemoBadge from '@/components/DemoBadge';
-import { cn } from '@/lib/utils';
 
 export default function AdminDiagnoses() {
   const [diagnoses, setDiagnoses] = useState([]);

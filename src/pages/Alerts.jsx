@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CloudSun, CloudRain, Droplets, Thermometer, AlertTriangle, CalendarClock, BellRing } from 'lucide-react';
+import { CloudSun, CloudRain, Droplets, Thermometer, AlertTriangle, BellRing } from 'lucide-react';
 import { useOutletContext } from 'react-router-dom';
 import base44 from '@/api/apiClient';
 import { fetchWeather } from '@/lib/weather';

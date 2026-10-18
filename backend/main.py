@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File
+from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
@@ -10,12 +10,14 @@ import uuid
 import json
 import base64
 import os
+import urllib.request
 
 import models
 import schemas
 import auth
 from database import engine, get_db, sync_schema
 import ml_service
+import stt_service
 
 # Create all tables in the database
 models.Base.metadata.create_all(bind=engine)
@@ -418,6 +420,116 @@ def delete_crop(crop_id: str, db: Session = Depends(get_db)):
 
 
 # ==========================================
+# REMINDERS CRUD
+# ==========================================
+
+@app.get("/api/reminders", response_model=list[schemas.ReminderResponse])
+def get_reminders(db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_optional_user)):
+    query = db.query(models.Reminder)
+    if current_user:
+        query = query.filter(models.Reminder.owner_id == current_user.id)
+    return query.order_by(models.Reminder.reminder_date.asc()).all()
+
+
+@app.post("/api/reminders", response_model=schemas.ReminderResponse)
+def create_reminder(reminder_in: schemas.ReminderCreate, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_optional_user)):
+    new_reminder = models.Reminder(
+        id=str(uuid.uuid4()),
+        crop_id=reminder_in.crop_id,
+        crop_name=reminder_in.crop_name,
+        title=reminder_in.title or "Crop Inspection Reminder",
+        reminder_date=reminder_in.reminder_date,
+        status=reminder_in.status or "pending",
+        notes=reminder_in.notes,
+        owner_id=current_user.id if current_user else None,
+    )
+    db.add(new_reminder)
+    db.commit()
+    db.refresh(new_reminder)
+    return new_reminder
+
+
+@app.get("/api/reminders/{reminder_id}", response_model=schemas.ReminderResponse)
+def get_reminder(reminder_id: str, db: Session = Depends(get_db)):
+    reminder = db.query(models.Reminder).filter(models.Reminder.id == reminder_id).first()
+    if not reminder:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    return reminder
+
+
+@app.put("/api/reminders/{reminder_id}", response_model=schemas.ReminderResponse)
+def update_reminder(reminder_id: str, reminder_update: schemas.ReminderUpdate, db: Session = Depends(get_db)):
+    reminder = db.query(models.Reminder).filter(models.Reminder.id == reminder_id).first()
+    if not reminder:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    for key, value in reminder_update.model_dump(exclude_unset=True).items():
+        setattr(reminder, key, value)
+    db.commit()
+    db.refresh(reminder)
+    return reminder
+
+
+@app.delete("/api/reminders/{reminder_id}")
+def delete_reminder(reminder_id: str, db: Session = Depends(get_db)):
+    reminder = db.query(models.Reminder).filter(models.Reminder.id == reminder_id).first()
+    if not reminder:
+        raise HTTPException(status_code=404, detail="Reminder not found")
+    db.delete(reminder)
+    db.commit()
+    return {"success": True, "message": "Reminder deleted"}
+
+
+# ==========================================
+# NOTIFICATIONS CRUD
+# ==========================================
+
+@app.get("/api/notifications", response_model=list[schemas.NotificationResponse])
+def get_notifications(db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_optional_user)):
+    query = db.query(models.Notification)
+    if current_user:
+        query = query.filter(models.Notification.owner_id == current_user.id)
+    return query.order_by(models.Notification.created_date.desc()).all()
+
+
+@app.post("/api/notifications", response_model=schemas.NotificationResponse)
+def create_notification(notif_in: schemas.NotificationCreate, db: Session = Depends(get_db), current_user: Optional[models.User] = Depends(get_optional_user)):
+    new_notif = models.Notification(
+        id=str(uuid.uuid4()),
+        type=notif_in.type or "advisory",
+        title=notif_in.title,
+        message=notif_in.message,
+        read=notif_in.read or False,
+        owner_id=current_user.id if current_user else None,
+    )
+    db.add(new_notif)
+    db.commit()
+    db.refresh(new_notif)
+    return new_notif
+
+
+@app.put("/api/notifications/{notif_id}", response_model=schemas.NotificationResponse)
+def update_notification(notif_id: str, notif_update: schemas.NotificationUpdate, db: Session = Depends(get_db)):
+    notif = db.query(models.Notification).filter(models.Notification.id == notif_id).first()
+    if not notif:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    for key, value in notif_update.model_dump(exclude_unset=True).items():
+        setattr(notif, key, value)
+    db.commit()
+    db.refresh(notif)
+    return notif
+
+
+@app.delete("/api/notifications/{notif_id}")
+def delete_notification(notif_id: str, db: Session = Depends(get_db)):
+    notif = db.query(models.Notification).filter(models.Notification.id == notif_id).first()
+    if not notif:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    db.delete(notif)
+    db.commit()
+    return {"success": True, "message": "Notification deleted"}
+
+
+# ==========================================
 # DISEASE KNOWLEDGE BASE
 # ==========================================
 
@@ -686,3 +798,115 @@ def update_expert_review(review_id: str, data: schemas.ExpertReviewUpdate, curre
     db.commit()
     db.refresh(review)
     return review
+
+# ==============================================================================
+# Speech-to-Text (STT) and AI Assistant Chat Endpoints
+# ==============================================================================
+
+@app.post("/api/transcribe")
+async def transcribe_audio(
+    file: UploadFile = File(...),
+    language: Optional[str] = Form("en")
+):
+    """
+    Accepts recorded voice audio (WAV, WebM, OGG) from the frontend microphone fallback,
+    validates format and size, and converts speech into real text using the configured
+    STT provider (Groq/OpenAI Whisper or Google Speech Recognition).
+    """
+    MAX_SIZE = 15 * 1024 * 1024  # 15 MB
+    audio_bytes = await file.read()
+    
+    if len(audio_bytes) == 0:
+        raise HTTPException(status_code=400, detail="Empty audio recording received.")
+    if len(audio_bytes) > MAX_SIZE:
+        raise HTTPException(status_code=400, detail="Audio file exceeds the maximum 15MB size limit.")
+    
+    try:
+        transcript, detected_lang = stt_service.transcribe_audio_file(
+            audio_bytes=audio_bytes,
+            language_code=language or "en",
+            filename=file.filename or "recording.wav"
+        )
+        return {
+            "transcript": transcript,
+            "language": detected_lang,
+            "success": True
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except RuntimeError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Audio transcription failed: {str(e)}")
+
+
+@app.post("/api/assistant/chat", response_model=schemas.ChatResponse)
+def assistant_chat(query: schemas.ChatQuery, db: Session = Depends(get_db)):
+    """
+    AI Assistant backend that handles farmer voice & text queries in Tamil, Hindi, and English.
+    Integrates crop care advice, disease knowledge base, and general agricultural queries.
+    """
+    msg = query.message.strip()
+    lang = (query.language or "en").lower().split("-")[0]
+    if lang not in ["en", "ta", "hi"]:
+        lang = "en"
+
+    # Check for direct disease mentions from knowledge base
+    matched_disease = None
+    msg_lower = msg.lower()
+    for key, info in ml_service.DISEASE_KNOWLEDGE.items():
+        name_lower = info.get("name", "").lower()
+        short_lower = info.get("short_name", "").lower()
+        if (short_lower and short_lower in msg_lower) or (name_lower and name_lower in msg_lower):
+            matched_disease = info
+            break
+
+    if matched_disease:
+        if lang == "ta":
+            reply = f"{matched_disease['name']} பற்றிய வழிகாட்டல்: {matched_disease['treatment']} தடுப்பு முறை: {matched_disease['prevention']}"
+        elif lang == "hi":
+            reply = f"{matched_disease['name']} के लिए सलाह: {matched_disease['treatment']} रोकथाम: {matched_disease['prevention']}"
+        else:
+            reply = f"Guidance for {matched_disease['name']}: {matched_disease['treatment']} Prevention: {matched_disease['prevention']}"
+        return schemas.ChatResponse(reply=reply, route="/knowledge", language=lang)
+
+    # Check for external LLM API if key is available
+    groq_api_key = os.getenv("GROQ_API_KEY")
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    if groq_api_key or openai_api_key:
+        try:
+            api_key = groq_api_key or openai_api_key
+            endpoint = "https://api.groq.com/openai/v1/chat/completions" if groq_api_key else "https://api.openai.com/v1/chat/completions"
+            model = "llama-3.1-8b-instant" if groq_api_key else "gpt-3.5-turbo"
+            system_prompt = (
+                "You are CropCare AI (Payir Kaavalan), an intelligent agricultural assistant for Indian farmers. "
+                "Provide helpful, concise farming and crop health guidance. "
+                "Answer in the same language as the user's prompt (Tamil, Hindi, or English). "
+                "Do not prescribe hazardous pesticides without label verification. Keep response under 3 sentences for clear voice playback."
+            )
+            messages = [{"role": "system", "content": system_prompt}]
+            for h in (query.history or [])[-4:]:
+                messages.append({"role": h.role, "content": h.content})
+            messages.append({"role": "user", "content": msg})
+
+            req_data = json.dumps({"model": model, "messages": messages, "max_tokens": 160}).encode("utf-8")
+            req = urllib.request.Request(endpoint, data=req_data, headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            })
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                res_json = json.loads(resp.read().decode("utf-8"))
+                reply_text = res_json["choices"][0]["message"]["content"].strip()
+                return schemas.ChatResponse(reply=reply_text, route=None, language=lang)
+        except Exception:
+            pass
+
+    # Standard rule-based fallback response
+    if lang == "ta":
+        reply = "உங்கள் கேள்வியைப் பெற்றேன். பயிர் இலைகளை ஸ்கேன் செய்ய 'பயிர் ஸ்கேன்' திறக்கலாம் அல்லது வேளாண் நிபுணரிடம் ஆலோசனை பெறலாம்."
+    elif lang == "hi":
+        reply = "मुझे आपका प्रश्न मिला। फसल की पत्ती स्कैन करने के लिए 'क्रॉप स्कैन' खोलें या कृषि विशेषज्ञ से परामर्श लें।"
+    else:
+        reply = "I received your question. You can use 'Crop Scan' to analyze leaf diseases or consult an agricultural expert for personalized care."
+
+    return schemas.ChatResponse(reply=reply, route=None, language=lang)

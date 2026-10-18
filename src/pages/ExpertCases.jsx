@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Stethoscope, Search, Filter, ArrowRight, Clock, AlertTriangle, 
-  CheckCircle2, ChevronDown, Sparkles, MapPin, Calendar, Tag, MessageCircle, Phone, User
+  Stethoscope, Search, ArrowRight, MapPin, Calendar, MessageCircle
 } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import EmptyState from '@/components/EmptyState';

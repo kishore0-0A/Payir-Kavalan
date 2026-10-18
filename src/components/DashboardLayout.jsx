@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Leaf, Menu, X, LogOut, ArrowLeft } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
 import base44 from '@/api/apiClient';
 import { cn } from '@/lib/utils';
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Clock, CheckCircle2, AlertTriangle, ArrowRight, Stethoscope, 
-  Sparkles, ShieldCheck, Filter, ArrowUpRight, Award, Zap, Activity
+  Sparkles, Award, Activity
 } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import { cn } from '@/lib/utils';

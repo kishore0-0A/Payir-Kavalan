@@ -171,3 +171,62 @@ class DiagnosisResponse(BaseModel):
     owner_id: Optional[str] = None
     created_date: datetime
 
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatQuery(BaseModel):
+    message: str
+    language: Optional[str] = "en"
+    history: Optional[List[ChatMessage]] = []
+
+class ChatResponse(BaseModel):
+    reply: str
+    route: Optional[str] = None
+    language: str
+
+
+class ReminderBase(BaseModel):
+    crop_id: Optional[str] = None
+    crop_name: Optional[str] = None
+    title: Optional[str] = None
+    reminder_date: Optional[str] = None
+    status: Optional[str] = "pending"
+    notes: Optional[str] = None
+
+class ReminderCreate(ReminderBase):
+    pass
+
+class ReminderUpdate(BaseModel):
+    crop_id: Optional[str] = None
+    crop_name: Optional[str] = None
+    title: Optional[str] = None
+    reminder_date: Optional[str] = None
+    status: Optional[str] = None
+    notes: Optional[str] = None
+
+class ReminderResponse(ReminderBase):
+    model_config = {"from_attributes": True}
+    id: str
+    owner_id: Optional[str] = None
+    created_date: Optional[datetime] = None
+
+
+class NotificationBase(BaseModel):
+    type: Optional[str] = "advisory"
+    title: str
+    message: str
+    read: Optional[bool] = False
+
+class NotificationCreate(NotificationBase):
+    pass
+
+class NotificationUpdate(BaseModel):
+    read: Optional[bool] = None
+
+class NotificationResponse(NotificationBase):
+    model_config = {"from_attributes": True}
+    id: str
+    owner_id: Optional[str] = None
+    created_date: Optional[datetime] = None
+

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { 
-  BookOpen, Search, X, Leaf, ShieldAlert, Sparkles, CheckCircle2, 
-  ExternalLink, FileText, Pill, ArrowRight, Calendar, AlertTriangle
+  BookOpen, Search, X, Leaf, ShieldAlert, CheckCircle2, Pill, ArrowRight, Calendar, AlertTriangle
 } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import { SUPPORTED_CROPS } from '@/lib/cropData';

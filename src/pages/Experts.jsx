@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Stethoscope, Plus, Clock, CheckCircle2, MessageSquare, Star, ShieldCheck, Zap, X, Phone } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Stethoscope, Plus, Clock, CheckCircle2, MessageSquare, Star, ShieldCheck, Zap, X } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import EmptyState from '@/components/EmptyState';
 import { cn } from '@/lib/utils';

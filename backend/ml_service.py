@@ -4,11 +4,22 @@ import json
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 
-import torch
-import torch.nn.functional as F
+try:
+    import torch
+    import torch.nn.functional as F
+    from torchvision import models, transforms
+    TORCH_AVAILABLE = True
+    DEVICE = torch.device("cpu")
+except ImportError:
+    TORCH_AVAILABLE = False
+    torch = None
+    F = None
+    models = None
+    transforms = None
+    DEVICE = "cpu"
+
 import numpy as np
 from PIL import Image, ImageOps, UnidentifiedImageError
-from torchvision import models, transforms
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent
@@ -17,8 +28,6 @@ CROPCARE_DIR = PROJECT_ROOT / "CropCareAI"
 MODEL_PATH = CROPCARE_DIR / "models" / "cropcare_tomato_best.pth"
 UPLOADS_DIR = BASE_DIR / "uploads"
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
-
-DEVICE = torch.device("cpu")
 
 # Comprehensive Agronomic Knowledge Base for Tomato Diseases
 DISEASE_KNOWLEDGE = {
@@ -157,12 +166,19 @@ class ModelManager:
         return cls._instance
 
     def _load_model(self):
+        if not TORCH_AVAILABLE:
+            print("[ML Service] PyTorch/torchvision not loaded; running in heuristic/agronomic knowledge mode.")
+            return
+
         if not MODEL_PATH.exists():
             print(f"[Warning] Model file not found at: {MODEL_PATH}")
             return
 
         print(f"[ML Service] Loading model weights from: {MODEL_PATH}")
-        checkpoint = torch.load(MODEL_PATH, map_location=DEVICE, weights_only=True)
+        try:
+            checkpoint = torch.load(MODEL_PATH, map_location=DEVICE, weights_only=True)
+        except TypeError:
+            checkpoint = torch.load(MODEL_PATH, map_location=DEVICE)
         self.class_names = checkpoint["class_names"]
         self.image_size = checkpoint.get("image_size", 224)
 
@@ -251,6 +267,8 @@ def validate_image_file(image_path: Path) -> Dict[str, Any]:
 
 def generate_gradcam_overlay(model, image_path: Path, target_class: int, class_names: List[str], image_transform, image_size: int, output_path: Path) -> Optional[str]:
     """Generates Grad-CAM visual heatmap overlaid on the leaf."""
+    if not TORCH_AVAILABLE or model is None:
+        return None
     try:
         import matplotlib
         matplotlib.use("Agg")

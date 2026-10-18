@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, Save, Loader2, Stethoscope, MessageSquare, CheckCircle2, 
-  AlertTriangle, ShieldCheck, FileText, Pill, Eye, MapPin, Calendar, 
-  HelpCircle, ChevronRight, User, Sparkles, Phone, PhoneCall, Video, Mail, MessageCircle, Send, X, Search, Plus
+  ArrowLeft, Loader2, Stethoscope, MessageSquare, CheckCircle2, Pill, MapPin, Calendar, User, Sparkles, Phone, Video, MessageCircle, Send, X, Search, Plus
 } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import SeverityBadge from '@/components/SeverityBadge';

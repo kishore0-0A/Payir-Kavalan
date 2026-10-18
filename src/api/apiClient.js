@@ -146,6 +146,26 @@ export const functions = {
   invoke: async (name, data) => (await apiClient.post(`/functions/${name}`, data)).data,
 };
 
+export const voice = {
+  transcribe: async (audioBlob, language = 'en') => {
+    const formData = new FormData();
+    formData.append('file', audioBlob, 'recording.wav');
+    formData.append('language', language);
+    const res = await apiClient.post('/transcribe', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return res.data;
+  },
+  chat: async (message, language = 'en', history = []) => {
+    const res = await apiClient.post('/assistant/chat', {
+      message,
+      language,
+      history,
+    });
+    return res.data;
+  }
+};
+
 export const app = {
   getPublicSettings: async () => ({})
 };
@@ -157,6 +177,7 @@ const api = {
   functions,
   integrations,
   app,
+  voice,
 };
 
 export default api;

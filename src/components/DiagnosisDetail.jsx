@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  AlertTriangle, Stethoscope, ShieldCheck, Download, Share2, ScanLine,
-  Info, Leaf, ListChecks, ShieldAlert, Volume2, ArrowRight, RefreshCw,
-  Sparkles, Layers, Activity, CheckCircle2, Trash2, Pill, Droplets, Clock,
-  Calendar, TrendingUp, HelpCircle, CheckSquare, Globe, FileDown, Check, Loader2, X
+import { Stethoscope, ShieldCheck, Download, Share2, ScanLine, ShieldAlert, ArrowRight, RefreshCw,
+  Sparkles, Layers, Pill, TrendingUp, CheckSquare, Globe, FileDown, Check, Loader2, X
 } from 'lucide-react';
-import base44 from '@/api/apiClient';
-import ConfidenceMeter from '@/components/ConfidenceMeter';
 import SeverityBadge from '@/components/SeverityBadge';
-import DemoBadge from '@/components/DemoBadge';
 import VoiceButton from '@/components/VoiceButton';
 import { useToast } from '@/components/ui/use-toast';
 import { getAgronomicPrescription } from '@/lib/agronomicPrescription';
@@ -23,6 +17,9 @@ export default function DiagnosisDetail({ diagnosis: d }) {
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [activeTab, setActiveTab] = useState('prescription'); // 'overview' | 'prescription' | 'prevention' | 'prognosis' | 'gradcam'
+  const [tankSize, setTankSize] = useState(15); // 15L backpack pump or custom
+  const [checkedActions, setCheckedActions] = useState({});
 
   if (!d) return null;
 
@@ -161,9 +158,7 @@ export default function DiagnosisDetail({ diagnosis: d }) {
     return `http://localhost:8000${url.startsWith('/') ? '' : '/'}${url}`;
   };
 
-  const [activeTab, setActiveTab] = useState('prescription'); // 'overview' | 'prescription' | 'prevention' | 'prognosis' | 'gradcam'
-  const [tankSize, setTankSize] = useState(15); // 15L backpack pump or custom
-  const [checkedActions, setCheckedActions] = useState({});
+
 
   const toggleAction = (idx) => {
     setCheckedActions(prev => ({ ...prev, [idx]: !prev[idx] }));

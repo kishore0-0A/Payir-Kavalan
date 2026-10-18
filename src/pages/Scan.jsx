@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import {
-  ScanLine, Camera, Upload, Image as ImageIcon, Check, AlertTriangle,
-  ArrowRight, ArrowLeft, X, Lightbulb, Loader2, Sparkles
+import { Upload, Check, AlertTriangle,
+  ArrowRight, ArrowLeft, X, Loader2, Sparkles
 } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import { SUPPORTED_CROPS } from '@/lib/cropData';

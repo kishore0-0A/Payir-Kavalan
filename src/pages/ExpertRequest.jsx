@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Stethoscope, ArrowLeft, Send, Loader2 } from 'lucide-react';
+import { ArrowLeft, Send, Loader2 } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import { SUPPORTED_CROPS } from '@/lib/cropData';
 import { useToast } from '@/components/ui/use-toast';

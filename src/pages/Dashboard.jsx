@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import {
-  ScanLine, Sprout, History, Stethoscope, CloudSun, BellRing,
-  ShieldAlert, CalendarClock, TrendingUp, AlertTriangle, ArrowRight, Leaf, Trash2, Sparkles, BookOpen
+  ScanLine, Sprout, History, Stethoscope, CloudSun,
+  ShieldAlert, AlertTriangle, ArrowRight, Leaf, Trash2
 } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import { useLanguage } from '@/lib/i18n';

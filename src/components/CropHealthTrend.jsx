@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  TrendingUp, TrendingDown, ArrowUpRight, ShieldCheck,
-  AlertTriangle, ScanLine, Calendar, Filter, Sparkles, ChevronRight
+  TrendingUp, TrendingDown, ArrowUpRight, ShieldCheck, ScanLine, Calendar, Sparkles, ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

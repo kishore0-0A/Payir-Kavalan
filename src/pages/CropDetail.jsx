@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Sprout, ScanLine, Calendar, Ruler, MapPin, ArrowLeft, Pencil, History, Stethoscope } from 'lucide-react';
+import { Sprout, ScanLine, Calendar, Ruler, MapPin, ArrowLeft, History, Stethoscope } from 'lucide-react';
 import base44 from '@/api/apiClient';
 import { SUPPORTED_CROPS } from '@/lib/cropData';
 import { cn } from '@/lib/utils';

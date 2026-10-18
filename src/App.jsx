@@ -19,6 +19,7 @@ import Features from '@/pages/Features';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import CropCareAssistant from '@/components/CropCareAssistant';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Auth
 import Login from '@/pages/Login';
@@ -148,18 +149,24 @@ const AuthenticatedApp = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <LanguageProvider>
-        <QueryClientProvider client={queryClientInstance}>
-          <Router>
-            <ScrollToTop />
-            <AuthenticatedApp />
-            <CropCareAssistant />
-          </Router>
-          <Toaster />
-        </QueryClientProvider>
-      </LanguageProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <LanguageProvider>
+          <QueryClientProvider client={queryClientInstance}>
+            <Router>
+              <ScrollToTop />
+              <ErrorBoundary>
+                <AuthenticatedApp />
+              </ErrorBoundary>
+              <ErrorBoundary fallback={null}>
+                <CropCareAssistant />
+              </ErrorBoundary>
+            </Router>
+            <Toaster />
+          </QueryClientProvider>
+        </LanguageProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   )
 }
 

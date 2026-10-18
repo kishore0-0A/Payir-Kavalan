@@ -760,51 +760,59 @@ const LanguageContext = createContext({
 /** @param {{ children?: React.ReactNode }} props */
 export function LanguageProvider({ children }) {
   const [lang, setLangState] = useState(() => {
-    const saved = localStorage.getItem('cc_lang');
-
-    return LANGUAGES.find((item) => item.code === saved)?.code || 'en';
+    try {
+      const saved = localStorage.getItem('cc_lang');
+      return LANGUAGES.find((item) => item.code === saved)?.code || 'en';
+    } catch {
+      return 'en';
+    }
   });
 
   /** @param {string} code */
   const setLang = (code) => {
-    if (!LANGUAGES.some((item) => item.code === code)) {
-      return;
-    }
+    const valid = LANGUAGES.find((item) => item.code === code)?.code || 'en';
 
-    localStorage.setItem('cc_lang', code);
-    
-    if (code === 'en') {
+    try {
+      localStorage.setItem('cc_lang', valid);
+    } catch {}
+
+    // Clear legacy googtrans cookies that may have caused DOM reconciliation crashes
+    try {
       document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=" + window.location.hostname + "; path=/;";
-    } else {
-      document.cookie = `googtrans=/en/${code}; path=/;`;
-      document.cookie = `googtrans=/en/${code}; domain=${window.location.hostname}; path=/;`;
-    }
-    
-    setLangState(code);
-    window.location.reload();
+    } catch {}
+
+    setLangState(valid);
   };
 
   useEffect(() => {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = 'ltr';
+    try {
+      document.documentElement.lang = lang || 'en';
+      document.documentElement.dir = 'ltr';
+    } catch {}
   }, [lang]);
 
-  /** @param {string} key */
-  const t = (key) => {
+  /**
+   * Safe translation lookup with guaranteed string fallback
+   * @param {string} key
+   * @param {string} [fallback]
+   */
+  const t = (key, fallback = '') => {
+    if (!key || typeof key !== 'string') return fallback || '';
     const entry = T[key];
 
     if (!entry) {
-      return key;
+      return fallback || key;
     }
 
-    return entry[lang] || entry.en || key;
+    const val = entry[lang] ?? entry.en ?? fallback ?? key;
+    return typeof val === 'string' ? val : String(val);
   };
 
   return (
     <LanguageContext.Provider
       value={{
-        lang,
+        lang: lang || 'en',
         setLang,
         t,
         languages: LANGUAGES
